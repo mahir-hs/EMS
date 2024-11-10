@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Models;
 
-namespace api.Models
+namespace api.Dtos.Employees
 {
-    public class Employee
+    public class EmployeeDto
     {
         public int Id {get;set;}
         public required string FirstName { get; set; }
@@ -23,8 +24,6 @@ namespace api.Models
          public int? DepartmentId { get; set; }
          public int? DesignationId { get; set; }
 
-         public Department? Department { get; set; }
-         public Designation? Designation { get; set; }
-        
+
     }
 }
