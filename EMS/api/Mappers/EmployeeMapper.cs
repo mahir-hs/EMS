@@ -19,8 +19,8 @@ namespace api.Mappers
               Phone = employee.Phone,
               Address = employee.Address,
               DateOfBirth = employee.DateOfBirth,
-              DepartmentId = employee.DepartmentId.HasValue?employee.DepartmentId.Value: null,
-              DesignationId = employee.DesignationId.HasValue?employee.DesignationId.Value:null
+              DepartmentId = employee.Department?.Id,
+              DesignationId = employee.Designation?.Id
             };
         }
 
@@ -33,8 +33,8 @@ namespace api.Mappers
                 Phone = dto.Phone,
                 Address = dto.Address,
                 DateOfBirth = dto.DateOfBirth,
-                DepartmentId = dto.DepartmentId,
-                DesignationId = dto.DesignationId
+                DepartmentId = dto?.DepartmentId,
+                DesignationId = dto?.DesignationId
             };
         }
 
