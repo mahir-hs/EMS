@@ -28,33 +28,49 @@ namespace api.Services
 
         }
 
-        public Task<EmployeeDto> DeleteAsync(int id)
+        public async Task<EmployeeDto> DeleteAsync(int id)
         {
-            TODO:throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<EmployeeDto>> GetAllAsync()
-        {
-            var data = await _context.GetAllAsync();
-            var toDto = data.Select(x=>x.ToEmployeeDto());
+            
+            var fetch = await _context.DeleteAsync(id);
+            var toDto = fetch!.ToEmployeeDto();
             return toDto;
         }
 
-        public async Task<EmployeeDto> GetByIdAsync(int id)
+        public async Task<IEnumerable<EmployeeDto?>> GetAllAsync()
+        {
+            var data = await _context.GetAllAsync();
+            if(data==null)
+            {
+                return []; 
+            }
+            var toDto = data.Select(x =>x.ToEmployeeDto());
+            return toDto;
+        }
+
+        public async Task<EmployeeDto?> GetByIdAsync(int id)
         {
             var data = await _context.GetByIdAsync(id);
-            var toDto = data.ToEmployeeDto();
+            var toDto = data?.ToEmployeeDto();
             return toDto;
         }
 
         public async Task<EmployeeDto> UpdateAsync(EmployeeUpdateDto entity)
         {
+            Console.WriteLine(entity.Id);
+            Console.WriteLine(entity.FirstName);
             var fetch = await _context.GetByIdAsync(entity.Id);
-            var data = entity.ToEmployee(fetch);
+            Console.WriteLine(fetch.Id);
+            var data = entity.ToEmployee(fetch!);
             fetch = await _context.UpdateAsync(data);
-            var toDto = fetch.ToEmployeeDto();
+            if (fetch == null)
+            {
+                throw new ArgumentNullException(nameof(fetch),
+                                                "Employee not found for the given Id.");
+            }
+       
+            Console.WriteLine(fetch.Id);
+            var toDto = fetch!.ToEmployeeDto();
             return toDto;
-
         }
     }
 }

@@ -34,38 +34,43 @@ namespace api.Repository
             }, commandType: CommandType.StoredProcedure);
         }
 
-        public Task<Employee> DeleteAsync(int id)
+        public async Task<Employee?> DeleteAsync(int id)
         {
-            TODO:throw new NotImplementedException();
+            using var con = _context.CreateConnection();
+            return await con.QueryFirstOrDefaultAsync<Employee>("dbo.DeleteEmployee", new
+            {
+                id,
+            }, commandType: CommandType.StoredProcedure);
         } 
 
-        public async Task<IEnumerable<Employee>> GetAllAsync()
+        public async Task<IEnumerable<Employee?>> GetAllAsync()
         {
-            using (var con = _context.CreateConnection())
-            {
-                string storeProcedure = "dbo.GetAllEmployee";
-                return await con.QueryAsync<Employee>(storeProcedure,commandType:CommandType.StoredProcedure);
-            }
+            using var con = _context.CreateConnection();
+            return await con.QueryAsync<Employee>("dbo.GetAllEmployees", commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<Employee?> GetByIdAsync(int id)
+        public async Task<Employee?> GetByIdAsync(int Id)
         {
-            // using (var con = _context.CreateConnection())
-            // {
-            //     string storeProcedure = "dbo.GetSingleEmployee";
-            //     return await con.QuerySingleOrDefaultAsync<Employee>(storeProcedure,id,commandType:CommandType.StoredProcedure);
-            // }
-            TODO:throw new NotImplementedException();
+            using var con = _context.CreateConnection();
+            return await con.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { Id }, commandType: CommandType.StoredProcedure);
+
         }
 
         public async Task<Employee?> UpdateAsync(Employee entity)
         {
-            // using (var con = _context.CreateConnection())
-            // {
-            //     string storeProcedure = "dbo.UpdateEmployee";
-            //     return await con.QueryFirstOrDefaultAsync<Employee>(storeProcedure,entity,commandType:CommandType.StoredProcedure);
-            // }
-            TODO:throw new NotImplementedException();
+            using var con = _context.CreateConnection();
+            return await con.QueryFirstOrDefaultAsync<Employee>("dbo.UpdateEmployee", new
+            {
+                entity.Id,
+                entity.FirstName,
+                entity.LastName,
+                entity.Email,
+                entity.Phone,
+                entity.Address,
+                entity.DateOfBirth,
+                entity.DepartmentId,
+                entity.DesignationId
+            }, commandType: CommandType.StoredProcedure);
         }
     }
 }

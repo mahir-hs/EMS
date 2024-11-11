@@ -26,8 +26,16 @@ namespace api.Controllers
             return Ok(fetch);
         }
 
+        [HttpGet]
+        [Route("Get")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var fetch = await _context.GetByIdAsync(id);
+            return Ok(fetch);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Add(EmployeeCreateDto dto)
+        public async Task<IActionResult> Add([FromBody] EmployeeCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -36,5 +44,23 @@ namespace api.Controllers
             var fetch = await _context.AddAsync(dto);
             return Ok(fetch);
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> Update([FromBody] EmployeeUpdateDto dto)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(await _context.UpdateAsync(dto));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            return Ok(await _context.DeleteAsync(Id));
+        }
+
+
     }
 }

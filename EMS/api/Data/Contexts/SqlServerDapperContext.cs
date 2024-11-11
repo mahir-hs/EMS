@@ -18,7 +18,7 @@ namespace api.Data.Contexts
         public SqlServerDapperContext(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("SqlServerConnection");
+            _connectionString = _configuration.GetConnectionString("SqlServerConnection")!;
         }
 
         public IDbConnection CreateConnection()

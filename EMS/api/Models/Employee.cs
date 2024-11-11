@@ -19,6 +19,7 @@ namespace api.Models
 
         public required DateTime DateOfBirth {get; set;}
 
+        public bool IsDeleted { get; set; }
 
          public int? DepartmentId { get; set; }
          public int? DesignationId { get; set; }

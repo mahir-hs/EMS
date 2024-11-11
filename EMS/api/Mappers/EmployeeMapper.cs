@@ -9,8 +9,13 @@ namespace api.Mappers
 {
     public static class EmployeeMapper
     {
-        public static EmployeeDto ToEmployeeDto(this Employee employee)
+        public static EmployeeDto ToEmployeeDto(this Employee? employee)
         {
+            if(employee==null)
+            {
+               throw new ArgumentNullException(nameof(employee), "Employee cannot be null.");
+            }
+
             return new EmployeeDto{
               Id = employee.Id,
               FirstName = employee.FirstName,
