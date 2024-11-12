@@ -11,13 +11,10 @@ using api.Services.IServices;
 
 namespace api.Services
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService(IEmployeeRepository context) : IEmployeeService
     {
-        private readonly IEmployeeRepository _context;
-        public EmployeeService(IEmployeeRepository context)
-        {
-            _context = context;
-        }
+        private readonly IEmployeeRepository _context = context;
+        
         public async Task<EmployeeDto> AddAsync(EmployeeCreateDto entity)
         {
             
@@ -56,10 +53,8 @@ namespace api.Services
 
         public async Task<EmployeeDto> UpdateAsync(EmployeeUpdateDto entity)
         {
-            Console.WriteLine(entity.Id);
-            Console.WriteLine(entity.FirstName);
+            
             var fetch = await _context.GetByIdAsync(entity.Id);
-            Console.WriteLine(fetch.Id);
             var data = entity.ToEmployee(fetch!);
             fetch = await _context.UpdateAsync(data);
             if (fetch == null)
@@ -67,8 +62,6 @@ namespace api.Services
                 throw new ArgumentNullException(nameof(fetch),
                                                 "Employee not found for the given Id.");
             }
-       
-            Console.WriteLine(fetch.Id);
             var toDto = fetch!.ToEmployeeDto();
             return toDto;
         }

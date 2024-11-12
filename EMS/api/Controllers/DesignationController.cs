@@ -1,29 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using api.Dtos.Designation;
 using api.Dtos.Employees;
-using api.Services;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/employee")]
+    [Route("api/designation")]
     [ApiController]
-    public class EmployeeController:ControllerBase
+    public class DesignationController(IDesignationService context):ControllerBase
     {
-        private readonly IEmployeeService _context;
-        public EmployeeController(IEmployeeService context)
-        {
-            _context = context;
-        }
+        private readonly IDesignationService _context = context;
 
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAll()
         {
-            var fetch =  await _context.GetAllAsync();
+            var fetch = await _context.GetAllAsync();
             return Ok(fetch);
         }
 
@@ -37,7 +29,7 @@ namespace api.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> Add([FromBody] EmployeeCreateDto dto)
+        public async Task<IActionResult> Add([FromBody] DesignationCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -49,9 +41,9 @@ namespace api.Controllers
 
         [HttpPatch]
         [Route("update")]
-        public async Task<IActionResult> Update([FromBody] EmployeeUpdateDto dto)
+        public async Task<IActionResult> Update([FromBody] DesignationUpdateDto dto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -64,7 +56,5 @@ namespace api.Controllers
         {
             return Ok(await _context.DeleteAsync(Id));
         }
-
-
     }
 }

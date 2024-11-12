@@ -24,8 +24,8 @@ namespace api.Mappers
               Phone = employee.Phone,
               Address = employee.Address,
               DateOfBirth = employee.DateOfBirth,
-              DepartmentId = employee.Department?.Id,
-              DesignationId = employee.Designation?.Id
+              DepartmentId = employee.DepartmentId,
+              DesignationId = employee.DesignationId
             };
         }
 
