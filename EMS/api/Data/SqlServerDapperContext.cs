@@ -5,16 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using api.Data.Contexts;
 
-
-namespace api.Data.Contexts
+namespace api.Data
 {
     public class SqlServerDapperContext : IDapperContext
     {
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
 
-        
+
         public SqlServerDapperContext(IConfiguration configuration)
         {
             _configuration = configuration;

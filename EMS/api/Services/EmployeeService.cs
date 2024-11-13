@@ -57,13 +57,7 @@ namespace api.Services
             var fetch = await _context.GetByIdAsync(entity.Id);
             var data = entity.ToEmployee(fetch!);
             fetch = await _context.UpdateAsync(data);
-            if (fetch == null)
-            {
-                throw new ArgumentNullException(nameof(fetch),
-                                                "Employee not found for the given Id.");
-            }
-            var toDto = fetch!.ToEmployeeDto();
-            return toDto;
+            return fetch!.ToEmployeeDto();
         }
     }
 }

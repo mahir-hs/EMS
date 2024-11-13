@@ -1,4 +1,5 @@
 using System.Net.NetworkInformation;
+using api.Data;
 using api.Data.Contexts;
 using api.Repository;
 using api.Repository.IRepository;
@@ -9,14 +10,17 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IDapperContext,SqlServerDapperContext>();
+builder.Services.AddSingleton<IMongoContext,MongoDbContext>();
 
 builder.Services.AddScoped<IEmployeeService,EmployeeService>();
 builder.Services.AddScoped<IDesignationService,DesignationService>();
 builder.Services.AddScoped<IDepartmentService,DepartmentService>();
+builder.Services.AddScoped<IOperationLogService,OperationLogService>();
 
 builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();
 builder.Services.AddScoped<IDesignationRepository,DesignationRepository>();
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+builder.Services.AddScoped<IOperationLogRepository,OperationLogRepository>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
