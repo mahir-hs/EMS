@@ -1,4 +1,4 @@
-﻿namespace api.Dtos.Department
+﻿namespace api.Dto.Department
 {
     public class DepartmentUpdateDto
     {

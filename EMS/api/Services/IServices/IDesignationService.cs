@@ -1,5 +1,5 @@
-﻿using api.Dtos.Designation;
-using api.Dtos.Employees;
+﻿using api.Dto.Designation;
+using api.Dto.Employees;
 
 namespace api.Services.IServices
 {

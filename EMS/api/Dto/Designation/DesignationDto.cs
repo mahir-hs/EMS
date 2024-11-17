@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace api.Dtos.Designation
+namespace api.Dto.Designation
 {
     public class DesignationDto
     {

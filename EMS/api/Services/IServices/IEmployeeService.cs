@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Dtos.Employees;
+using api.Dto.Employees;
 using api.Models;
 
 namespace api.Services.IServices

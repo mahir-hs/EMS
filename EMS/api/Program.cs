@@ -11,16 +11,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IDapperContext,SqlServerDapperContext>();
 builder.Services.AddSingleton<IMongoContext,MongoDbContext>();
+builder.Services.AddSingleton<IPgContext, PgServerDapperContext>();
 
 builder.Services.AddScoped<IEmployeeService,EmployeeService>();
 builder.Services.AddScoped<IDesignationService,DesignationService>();
 builder.Services.AddScoped<IDepartmentService,DepartmentService>();
 builder.Services.AddScoped<IOperationLogService,OperationLogService>();
+builder.Services.AddScoped<IEmployeeAttendanceService,EmployeeAttendanceService>();
 
 builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();
 builder.Services.AddScoped<IDesignationRepository,DesignationRepository>();
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
 builder.Services.AddScoped<IOperationLogRepository,OperationLogRepository>();
+builder.Services.AddScoped<IEmployeeAttendanceRepository,EmployeeAttendanceRepository>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -1,4 +1,4 @@
-﻿using api.Dtos.Department;
+﻿using api.Dto.Department;
 using api.Mappers;
 using api.Repository.IRepository;
 using api.Services.IServices;

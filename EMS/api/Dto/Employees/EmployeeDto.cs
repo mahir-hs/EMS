@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Models;
 
-namespace api.Dtos.Employees
+namespace api.Dto.Employees
 {
     public class EmployeeDto
     {

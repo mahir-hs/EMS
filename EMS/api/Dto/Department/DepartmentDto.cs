@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace api.Dtos.Department
+namespace api.Dto.Department
 {
     public class DepartmentDto
     {

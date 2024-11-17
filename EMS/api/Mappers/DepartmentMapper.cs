@@ -1,4 +1,4 @@
-﻿using api.Dtos.Department;
+﻿using api.Dto.Department;
 using api.Models;
 
 namespace api.Mappers

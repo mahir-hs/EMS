@@ -1,5 +1,5 @@
-﻿using api.Dtos.Department;
-using api.Dtos.Designation;
+﻿using api.Dto.Department;
+using api.Dto.Designation;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
