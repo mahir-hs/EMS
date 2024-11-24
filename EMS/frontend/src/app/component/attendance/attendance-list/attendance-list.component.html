@@ -1,28 +1,30 @@
 <div class="attendance-container">
-  <div class="header">
-    <h1>Attendance Records</h1>
+  <h1>Attendance Records</h1>
 
-    <!-- Search and Filter Controls -->
-    <div class="filter-controls">
-      <input
-        type="text"
-        placeholder="Search by Employee ID"
-        [(ngModel)]="searchText"
-        (input)="filterAttendance()"
-      />
-      <button class="add-btn" [routerLink]="'/attendance-add'">Add Attendance</button>
-    </div>
+  <!-- Search and Filter Controls -->
+  <div class="filter-controls">
+    <input
+      type="text"
+      placeholder="Search by Employee ID"
+      [(ngModel)]="searchText"
+      (input)="filterAttendance()"
+      class="search-box"
+    />
+    <button [routerLink]="'/attendance-add'" class="add-btn">Add Attendance</button>
   </div>
 
-  <div *ngIf="loading" class="loading-indicator">
-    <span>Loading attendance...</span>
+  <!-- Loading Indicator -->
+  <div *ngIf="loading">
+    <p>Loading attendance records...</p>
   </div>
 
-  <div *ngIf="!loading && filteredAttendance.length === 0" class="no-data">
-    <p>No attendance records available.</p>
+  <!-- No Data Message -->
+  <div *ngIf="!loading && filteredAttendance.length === 0">
+    <p>No attendance records found.</p>
   </div>
 
-  <table *ngIf="!loading && filteredAttendance.length > 0" class="attendance-table">
+  <!-- Attendance Table -->
+  <table *ngIf="!loading && filteredAttendance.length > 0">
     <thead>
       <tr>
         <th>ID</th>
@@ -36,10 +38,10 @@
       <tr *ngFor="let record of filteredAttendance">
         <td>{{ record.id }}</td>
         <td>{{ record.employeeId }}</td>
-        <td>{{ record.checkInTime | date:'short' }}</td>
-        <td>{{ record.checkOutTime ? (record.checkOutTime | date:'short') : 'N/A' }}</td>
-        <td class="action-buttons">
-          <button class="update-btn" [routerLink]="['/attendance-update', record.id]">Update</button>
+        <td>{{ record.checkInTime | date: 'short' }}</td>
+        <td>{{ record.checkOutTime ? (record.checkOutTime | date: 'short') : 'N/A' }}</td>
+        <td>
+          <button [routerLink]="['/attendance-update', record.id]" class="update-btn">Update</button>
         </td>
       </tr>
     </tbody>
