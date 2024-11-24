@@ -1,0 +1,47 @@
+<div *ngIf="loading" class="loading-container">
+  <p>Loading employees...</p>
+</div>
+
+<div *ngIf="!loading && employees.length === 0" class="empty-state">
+  <h2>No employees found.</h2>
+  <a [routerLink]="'/add'" class="cta-btn">Add New Employee</a>
+</div>
+
+<div *ngIf="!loading && employees.length > 0" class="employee-container">
+  <h1>Employee Management</h1>
+  <a [routerLink]="'/employee-add'" class="cta-btn">Add Employee</a>
+
+  <table class="employee-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Date of Birth</th>
+        <th>Department</th>
+        <th>Designation</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees">
+        <td>{{ employee.id }}</td>
+        <td>{{ employee.firstName }}</td>
+        <td>{{ employee.lastName }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.phone }}</td>
+        <td>{{ employee.address }}</td>
+        <td>{{ employee.dateOfBirth | date }}</td>
+        <td>{{ employee.departmentId || 'N/A' }}</td>
+        <td>{{ employee.designationId || 'N/A' }}</td>
+        <td>
+          <button [routerLink]="['/employee-update', employee.id]" class="action-btn">Edit</button>
+          <button (click)="deleteEmployee(employee.id)" class="action-btn">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

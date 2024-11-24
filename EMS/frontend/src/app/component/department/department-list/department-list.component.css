@@ -1,0 +1,159 @@
+/* Container Styling */
+.department-container {
+  font-family: 'Poppins', sans-serif;
+  margin: 40px auto;
+  max-width: 900px;
+  padding: 20px;
+  background-color: #1e1e2f;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #ffd700;
+}
+
+.add-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #4caf50, #81c784);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+  background: linear-gradient(135deg, #43a047, #66bb6a);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.5);
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+/* No Data Styling */
+.no-data {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  color: #ff5722;
+}
+
+/* Table Styling */
+.department-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.department-table th,
+.department-table td {
+  padding: 12px 16px;
+  border: 1px solid #333;
+}
+
+.department-table thead {
+  background-color: #343a40;
+  color: #ffd700;
+}
+
+.department-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.department-table tbody tr:nth-child(odd) {
+  background-color: #2b2f3a;
+}
+
+.department-table tbody tr:nth-child(even) {
+  background-color: #242732;
+}
+
+.department-table tbody tr:hover {
+  background-color: #3e4453;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #1e88e5, #64b5f6);
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(135deg, #1565c0, #42a5f5);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.5);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #e53935, #ef5350);
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #c62828, #f44336);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .department-container {
+    padding: 15px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .add-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .department-table th,
+  .department-table td {
+    padding: 10px 12px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}

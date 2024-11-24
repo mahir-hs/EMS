@@ -1,0 +1,19 @@
+<div class="designation-container">
+  <h1>Add Designation</h1>
+
+  <form (ngSubmit)="addDesignation()" class="designation-form">
+    <div class="form-group">
+      <label for="role">Designation Role</label>
+      <input
+        type="text"
+        id="role"
+        name="role"
+        [(ngModel)]="designation.role"
+        placeholder="Enter designation role"
+        required
+      />
+    </div>
+
+    <button type="submit" class="submit-btn">Add Designation</button>
+  </form>
+</div>

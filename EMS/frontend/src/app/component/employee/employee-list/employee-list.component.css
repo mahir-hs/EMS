@@ -1,0 +1,95 @@
+/* General page styling */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+h1, h2 {
+  color: #333;
+  font-weight: normal;
+}
+
+/* Loading and empty states */
+.loading-container {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px;
+}
+
+.empty-state h2 {
+  font-size: 1.5rem;
+  color: #555;
+}
+
+.cta-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.cta-btn:hover {
+  background-color: #45a049;
+}
+
+/* Employee table styling */
+.employee-container {
+  margin-top: 20px;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.employee-table th,
+.employee-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.employee-table th {
+  background-color: #f1f1f1;
+}
+
+.employee-table td {
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.employee-table tr:hover {
+  background-color: #fafafa;
+}
+
+/* Action buttons for Edit and Delete */
+.action-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  background-color: #0056b3;
+}
+
+.action-btn:active {
+  background-color: #003d7a;
+}

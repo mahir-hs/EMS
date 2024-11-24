@@ -1,0 +1,27 @@
+<div class="attendance-add-container">
+  <h1>Add Attendance</h1>
+
+  <!-- Employee selection dropdown -->
+  <div class="form-group">
+    <label for="employee">Select Employee</label>
+    <select id="employee" [(ngModel)]="selectedEmployeeId" name="employee" class="form-control" (change)="onEmployeeChange()" required>
+      <option value="0" disabled>Select an employee</option>
+      <option *ngFor="let employee of employees" [value]="employee.id">
+        {{ employee.firstName }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="selectedEmployeeId > 0">
+    <form (ngSubmit)="addAttendance()">
+      <div class="form-group">
+        <label for="checkInTime">Check-In Time</label>
+        <input type="datetime-local" id="checkInTime" [(ngModel)]="attendance.checkInTime" name="checkInTime" class="form-control" required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="!attendance.checkInTime || !attendance.employeeId">Add Attendance</button>
+      </div>
+    </form>
+  </div>
+</div>

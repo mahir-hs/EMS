@@ -1,0 +1,37 @@
+<div class="department-container">
+  <div class="header">
+    <h1>Department List</h1>
+    <button class="add-btn" [routerLink]="'/department-add'">Add Department</button>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="loading-indicator">
+    <span>Loading departments...</span>
+  </div>
+
+  <!-- No Departments Message -->
+  <div *ngIf="!loading && department.length === 0" class="no-data">
+    <p>No departments found.</p>
+  </div>
+
+  <!-- Department Table -->
+  <table *ngIf="!loading && department.length > 0" class="department-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dept of department">
+        <td>{{ dept.id }}</td>
+        <td>{{ dept.dept }}</td>
+        <td class="action-buttons">
+          <button class="edit-btn" [routerLink]="['/department-update', dept.id]">Edit</button>
+          <button class="delete-btn" (click)="deleteDepartment(dept.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

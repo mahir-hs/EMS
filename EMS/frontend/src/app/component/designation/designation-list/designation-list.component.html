@@ -1,0 +1,40 @@
+<div class="designation-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Designation List</h1>
+    <button class="add-btn" [routerLink]="'/designation-add'">+ Add Designation</button>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="loading-indicator">
+    <span>Loading designations...</span>
+  </div>
+
+  <!-- No Designations Found -->
+  <div *ngIf="!loading && designation.length === 0" class="no-data">
+    <p>No designations available. Add a new one!</p>
+  </div>
+
+  <!-- Designation Table -->
+  <div *ngIf="!loading && designation.length > 0" class="table-container">
+    <table class="designation-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let des of designation">
+          <td>{{ des.id }}</td>
+          <td>{{ des.role }}</td>
+          <td class="action-buttons">
+            <button class="edit-btn" [routerLink]="['/designation-update', des.id]">Edit</button>
+            <button class="delete-btn" (click)="deleteDesignation(des.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
