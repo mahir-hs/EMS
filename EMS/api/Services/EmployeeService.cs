@@ -51,12 +51,12 @@ namespace api.Services
             return toDto;
         }
 
-        public async Task<EmployeeDto> UpdateAsync(EmployeeUpdateDto entity)
+        public async Task<EmployeeDto> UpdateAsync(int id, EmployeeUpdateDto entity)
         {
             
-            var fetch = await _context.GetByIdAsync(entity.Id);
+            var fetch = await _context.GetByIdAsync(id);
             var data = entity.ToEmployee(fetch!);
-            fetch = await _context.UpdateAsync(data);
+            fetch = await _context.UpdateAsync(id,data);
             return fetch!.ToEmployeeDto();
         }
     }

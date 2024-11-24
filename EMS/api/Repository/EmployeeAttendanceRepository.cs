@@ -80,8 +80,9 @@ namespace api.Repository
             var parametars = new DynamicParameters();
               
             parametars.Add("p_attendance_id",id);
+            parametars.Add("p_checkin_time", attendance.CheckInTime);
             parametars.Add("p_checkout_time", attendance.CheckOutTime);
-            await pgCon.ExecuteAsync("select public.updateemployeeattendance(@p_attendance_id,@p_checkout_time)",parametars);
+            await pgCon.ExecuteAsync("select public.updateemployeeattendance(@p_attendance_id,@p_checkin_time,@p_checkout_time)",parametars);
             return;
             
         }

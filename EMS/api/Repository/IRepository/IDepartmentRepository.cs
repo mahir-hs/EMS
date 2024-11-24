@@ -4,6 +4,6 @@ namespace api.Repository.IRepository
 {
     public interface IDepartmentRepository : IRepository<Department>
     {
-        Task<Department?> UpdateAsync(Department entity);
+        Task<Department?> UpdateAsync(int id, Department entity);
     }
 }

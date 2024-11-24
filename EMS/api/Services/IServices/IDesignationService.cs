@@ -6,6 +6,6 @@ namespace api.Services.IServices
     public interface IDesignationService:IService<DesignationDto>
     {
         Task<DesignationDto> AddAsync(DesignationCreateDto entity);
-        Task<DesignationDto> UpdateAsync(DesignationUpdateDto entity);
+        Task<DesignationDto> UpdateAsync(int id,DesignationUpdateDto entity);
     }
 }

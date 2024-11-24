@@ -40,11 +40,11 @@ namespace api.Services
            
         }
 
-        public async Task<DesignationDto> UpdateAsync(DesignationUpdateDto entity)
+        public async Task<DesignationDto> UpdateAsync(int id, DesignationUpdateDto entity)
         {
-            var fetch = await _context.GetByIdAsync(entity.Id);
+            var fetch = await _context.GetByIdAsync(id);
             var data = entity.ToDesignation(fetch!);
-            fetch = await _context.UpdateAsync(data);
+            fetch = await _context.UpdateAsync(id,data);
             if (fetch == null)
             {
                 throw new ArgumentNullException(nameof(fetch),

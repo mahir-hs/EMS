@@ -18,14 +18,14 @@ namespace api.Controllers
             return Ok(await _context.GetAllAttendanceAsync());
         }
 
-        //[HttpGet]
-        //[Route("get")]
-        //public async Task<IActionResult> Get(int id)
-        //{
-        //    return Ok(await _context.GetEmployeeWithAttendanceAsync(id));
-        //}
+        [HttpGet]
+        [Route("get")]
+        public async Task<IActionResult> Get(int id)
+        {
+            return Ok(await _context.GetAttendanceAsync(id));
+        }
 
-        
+
         [HttpPost]
         [Route("add")]
         public async Task<OkResult> Add([FromBody] EmployeeAttendanceCreateDto dto)
@@ -36,9 +36,10 @@ namespace api.Controllers
 
         [HttpPatch]
         [Route("update")]
-        public async Task<OkResult> Update(int attendanceId,[FromBody] EmployeeAttendanceUpdateDto dto)
+        public async Task<OkResult> Update([FromQuery] int id,[FromBody] EmployeeAttendanceUpdateDto dto)
         {
-            await _context.UpdateAttendanceAsync(attendanceId,dto);
+            Console.WriteLine(id);
+            await _context.UpdateAttendanceAsync(id,dto);
             return Ok();
         }
 

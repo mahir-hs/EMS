@@ -34,7 +34,15 @@ builder.Services.AddSwaggerGen(option =>
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Employee Management System API", Version = "v1" });
     
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200") // Update with your Angular app URL
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,8 +53,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
+
+app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseCors("AllowAngularApp"); // Apply CORS policy
 app.MapControllers();
 
 app.Run();

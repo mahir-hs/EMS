@@ -36,11 +36,11 @@ namespace api.Services
             return data?.ToDepartmentDto();
         }
 
-        public async Task<DepartmentDto> UpdateAsync(DepartmentUpdateDto entity)
+        public async Task<DepartmentDto> UpdateAsync(int id, DepartmentUpdateDto entity)
         {
-            var fetch = await _context.GetByIdAsync(entity.Id);
+            var fetch = await _context.GetByIdAsync(id);
             var data = entity.ToDepartment(fetch!);
-            fetch = await _context.UpdateAsync(data);
+            fetch = await _context.UpdateAsync(id,data);
             if (fetch == null)
             {
                 throw new ArgumentNullException(nameof(fetch),

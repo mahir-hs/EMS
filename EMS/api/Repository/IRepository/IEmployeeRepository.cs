@@ -8,6 +8,6 @@ namespace api.Repository.IRepository
 {
     public interface IEmployeeRepository:IRepository<Employee>
     {
-        Task<Employee?> UpdateAsync(Employee entity);
+        Task<Employee?> UpdateAsync(int id,Employee entity);
     }
 }

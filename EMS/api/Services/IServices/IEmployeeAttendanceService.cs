@@ -13,5 +13,6 @@ namespace api.Services.IServices
 
 
         Task<EmployeeWithAttendanceDto> GetEmployeeWithAttendanceAsync(int employeeId);
+        Task <EmployeeAttendanceDto> GetAttendanceAsync(int attendanceID);
     }
 }

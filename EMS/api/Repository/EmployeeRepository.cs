@@ -72,7 +72,7 @@ namespace api.Repository
             }
         }
 
-        public async Task<Employee?> UpdateAsync(Employee entity)
+        public async Task<Employee?> UpdateAsync(int id, Employee entity)
         {
             using var con = _context.CreateConnection();
             con.Open();
@@ -80,14 +80,14 @@ namespace api.Repository
 
             try
             {
-                var oldEntity = await GetByIdAsync(entity.Id);
+                var oldEntity = await GetByIdAsync(id);
                 if (oldEntity == null) return null;
 
                 var updatedEmployee = await con.QueryFirstOrDefaultAsync<Employee>(
                     "dbo.UpdateEmployee",
                     new
                     {
-                        entity.Id,
+                        id,
                         entity.FirstName,
                         entity.LastName,
                         entity.Email,

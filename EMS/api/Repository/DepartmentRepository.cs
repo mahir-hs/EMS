@@ -103,7 +103,7 @@ namespace api.Repository
             return await con.QueryFirstOrDefaultAsync<Department>("dbo.GetDepartmentById", new { id }, commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<Department?> UpdateAsync(Department entity)
+        public async Task<Department?> UpdateAsync(int id, Department entity)
         {
             using var con = _context.CreateConnection();
             con.Open();
@@ -111,10 +111,10 @@ namespace api.Repository
 
             try
             {
-                var oldEntity = await GetByIdAsync(entity.Id);
+                var oldEntity = await GetByIdAsync(id);
                 var department = await con.QueryFirstOrDefaultAsync<Department>(
                     "dbo.UpdateDepartment",
-                    new { entity.Id, entity.Dept },
+                    new { id, entity.Dept },
                     transaction,
                     commandType: CommandType.StoredProcedure);
 

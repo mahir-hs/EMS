@@ -20,6 +20,7 @@ namespace api.Services
         public async Task UpdateAttendanceAsync(int attendanceId, EmployeeAttendanceUpdateDto attendanceDto)
         {
             var fetch = await _context.GetAttendanceByAttendanceIdAsync(attendanceId);
+            Console.WriteLine($"Attendance ID: {attendanceId}, Check-Out Time: {attendanceDto.CheckOutTime}");
             await _context.UpdateAttendanceAsync(attendanceId, attendanceDto.ToEmployeeAttendance(fetch!));
             return;
         }
@@ -49,6 +50,10 @@ namespace api.Services
 
         }
 
-       
+        public async Task<EmployeeAttendanceDto> GetAttendanceAsync(int attendanceID)
+        {
+            var fetch =  await _context.GetAttendanceByAttendanceIdAsync(attendanceID);
+            return fetch.ToEmployeeAttendanceDto();
+        }
     }
 }

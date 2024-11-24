@@ -10,6 +10,6 @@ namespace api.Services.IServices
     public interface IEmployeeService:IService<EmployeeDto>
     {
         Task<EmployeeDto> AddAsync(EmployeeCreateDto entity);
-        Task<EmployeeDto> UpdateAsync(EmployeeUpdateDto entity);
+        Task<EmployeeDto> UpdateAsync(int id,EmployeeUpdateDto entity);
     }
 }

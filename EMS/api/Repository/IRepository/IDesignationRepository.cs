@@ -4,6 +4,6 @@ namespace api.Repository.IRepository
 {
     public interface IDesignationRepository : IRepository<Designation>
     {
-        Task<Designation?> UpdateAsync(Designation entity);
+        Task<Designation?> UpdateAsync(int id, Designation entity);
     }
 }

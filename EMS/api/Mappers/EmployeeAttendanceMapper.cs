@@ -47,6 +47,7 @@ namespace api.Mappers
                 throw new ArgumentNullException(nameof(attendance), "EmployeeAttendance cannot be null.");
             }
 
+            attendance.CheckInTime = dto.CheckInTime;
             if (dto.CheckOutTime.HasValue) attendance.CheckOutTime = dto.CheckOutTime.Value;
             return attendance;
         }

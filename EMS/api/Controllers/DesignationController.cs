@@ -41,13 +41,13 @@ namespace api.Controllers
 
         [HttpPatch]
         [Route("update")]
-        public async Task<IActionResult> Update([FromBody] DesignationUpdateDto dto)
+        public async Task<IActionResult> Update(int id,[FromBody] DesignationUpdateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return Ok(await _context.UpdateAsync(dto));
+            return Ok(await _context.UpdateAsync(id,dto));
         }
 
         [HttpDelete]
