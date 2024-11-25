@@ -15,8 +15,13 @@ export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
   departments: any[] = [];
   designations: any[] = [];
+  paginatedEmployees: Employee[] = [];
+
   loading: boolean = true;
 
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 1;
   constructor(
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
@@ -34,6 +39,8 @@ export class EmployeeListComponent implements OnInit {
       next: (data) => {
         this.employees = data;
         this.loading = false;
+        this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
+        this.setPaginatedEmployees();
       },
       error: (err) => {
         console.error('Failed to fetch employees:', err);
@@ -41,7 +48,25 @@ export class EmployeeListComponent implements OnInit {
       },
     });
   }
+  setPaginatedEmployees(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedEmployees = this.employees.slice(startIndex, endIndex);
+  }
 
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.setPaginatedEmployees();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.setPaginatedEmployees();
+    }
+  }
   fetchDepartments(): void {
     this.departmentService.getAll().subscribe({
       next: (data) => {

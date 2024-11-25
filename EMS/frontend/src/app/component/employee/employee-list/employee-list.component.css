@@ -93,3 +93,18 @@ h1, h2 {
 .action-btn:active {
   background-color: #003d7a;
 }
+.pagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.pagination span {
+  margin: 0 10px;
+  font-weight: bold;
+}

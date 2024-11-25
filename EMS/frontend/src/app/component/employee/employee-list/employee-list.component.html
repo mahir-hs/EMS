@@ -4,7 +4,7 @@
 
 <div *ngIf="!loading && employees.length === 0" class="empty-state">
   <h2>No employees found.</h2>
-  <a [routerLink]="'/add'" class="cta-btn">Add New Employee</a>
+  <a [routerLink]="'/employee-add'" class="cta-btn">Add New Employee</a>
 </div>
 
 <div *ngIf="!loading && employees.length > 0" class="employee-container">
@@ -27,7 +27,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let employee of employees">
+      <!-- Loop through paginatedEmployees for pagination -->
+      <tr *ngFor="let employee of paginatedEmployees">
         <td>{{ employee.id }}</td>
         <td>{{ employee.firstName }}</td>
         <td>{{ employee.lastName }}</td>
@@ -35,7 +36,7 @@
         <td>{{ employee.phone }}</td>
         <td>{{ employee.address }}</td>
         <td>{{ employee.dateOfBirth | date }}</td>
-<td>{{ getDepartmentName(employee.departmentId) }}</td>
+        <td>{{ getDepartmentName(employee.departmentId) }}</td>
         <td>{{ getDesignationName(employee.designationId) }}</td>
         <td>
           <button [routerLink]="['/employee-update', employee.id]" class="action-btn">Edit</button>
@@ -44,4 +45,11 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="employees.length > itemsPerPage" class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
 </div>
