@@ -9,12 +9,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-attendance-add',
   standalone: true,
-  imports: [FormsModule,CommonModule,NgSelectModule],
+  imports: [FormsModule, CommonModule, NgSelectModule],
   templateUrl: './attendance-add.component.html',
-  styleUrl: './attendance-add.component.css'
+  styleUrl: './attendance-add.component.css',
 })
 export class AttendanceAddComponent implements OnInit {
-  
   attendance = {
     employeeId: 0,
     checkInTime: new Date(),
@@ -40,7 +39,7 @@ export class AttendanceAddComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching employees:', err);
-      }
+      },
     });
   }
 
@@ -48,9 +47,7 @@ export class AttendanceAddComponent implements OnInit {
     this.attendance.employeeId = this.selectedEmployeeId;
   }
 
-
   addAttendance(): void {
-
     if (!this.attendance.checkInTime || !this.attendance.employeeId) {
       console.error('Please provide both check-in time and EmployeeId.');
       return;
@@ -75,7 +72,7 @@ export class AttendanceAddComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error adding attendance:', err);
-      }
+      },
     });
   }
 }

@@ -35,8 +35,8 @@
         <td>{{ employee.phone }}</td>
         <td>{{ employee.address }}</td>
         <td>{{ employee.dateOfBirth | date }}</td>
-        <td>{{ employee.departmentId || 'N/A' }}</td>
-        <td>{{ employee.designationId || 'N/A' }}</td>
+<td>{{ getDepartmentName(employee.departmentId) }}</td>
+        <td>{{ getDesignationName(employee.designationId) }}</td>
         <td>
           <button [routerLink]="['/employee-update', employee.id]" class="action-btn">Edit</button>
           <button (click)="deleteEmployee(employee.id)" class="action-btn">Delete</button>

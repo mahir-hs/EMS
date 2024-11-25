@@ -1,13 +1,17 @@
+import { DesignationService } from './../../../service/designation.service';
+import { DepartmentService } from './../../../service/department.service';
 import { EmployeeService } from './../../../service/employee.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-employee-add',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, NgSelectModule],
   templateUrl: './employee-add.component.html',
-  styleUrls: ['./employee-add.component.css']
+  styleUrls: ['./employee-add.component.css'],
 })
 export class EmployeeAddComponent {
   employee = {
@@ -18,21 +22,56 @@ export class EmployeeAddComponent {
     address: '',
     dateOfBirth: '',
     departmentId: null,
-    designationId: null 
+    designationId: null,
   };
 
-  constructor(private employeeService: EmployeeService, private router: Router) {}
+  designation: any[] = [];
+  department: any[] = [];
 
-  // Add employee method
-  addEmployee(): void {
-    // Call the service to add employee and navigate on success
-    this.employeeService.add(this.employee).subscribe({
-      next: () => {
-        this.router.navigate(['']);  // Redirect to employee list
+  constructor(
+    private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private designationService: DesignationService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.getDepartment();
+    this.getDesignation();
+  }
+
+  getDepartment(): void {
+    this.departmentService.getAll().subscribe({
+      next: (data) => {
+        this.department = data;
+        // console.log('Departments:', this.department);
       },
       error: (err) => {
-        console.error('Error adding employee', err);  // Handle error if needed
-      }
+        console.log('Error fetching department: ', err);
+      },
+    });
+  }
+
+  getDesignation(): void {
+    this.designationService.getAll().subscribe({
+      next: (data) => {
+        this.designation = data;
+        // console.log('Designation:', this.designation);
+      },
+      error: (err) => {
+        console.log('Error fetching designation: ', err);
+      },
+    });
+  }
+
+  addEmployee(): void {
+    this.employeeService.add(this.employee).subscribe({
+      next: () => {
+        this.router.navigate(['']);
+      },
+      error: (err) => {
+        console.error('Error adding employee', err);
+      },
     });
   }
 }
