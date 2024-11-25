@@ -7,9 +7,9 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-employee-update',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './employee-update.component.html',
-  styleUrls: ['./employee-update.component.css']
+  styleUrls: ['./employee-update.component.css'],
 })
 export class EmployeeUpdateComponent implements OnInit {
   employeeId: number = 0;
@@ -21,9 +21,9 @@ export class EmployeeUpdateComponent implements OnInit {
     email: '',
     phone: '',
     address: '',
-    dateOfBirth: '',
+    dateOfBirth: new Date(),
     departmentId: null,
-    designationId: null
+    designationId: null,
   };
 
   constructor(
@@ -33,30 +33,33 @@ export class EmployeeUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get the ID from the route params
     this.employeeId = +this.route.snapshot.paramMap.get('id')!;
-    this.getEmployeeDetails();  // Fetch employee details for the edit form
+    this.getEmployeeDetails();
   }
 
   getEmployeeDetails(): void {
     this.employeeService.getById(this.employeeId).subscribe({
       next: (data) => {
-        this.employee = data;  // Update form data with employee details
+        this.employee = {
+          ...data,
+          dateOfBirth: data.dateOfBirth ? data.dateOfBirth.split('T')[0] : '',
+        };
+        console.log(this.employee);
       },
       error: (error) => {
         console.error('Error fetching employee details:', error);
-      }
+      },
     });
   }
 
   updateEmployee(): void {
     this.employeeService.update(this.employeeId, this.employee).subscribe({
       next: () => {
-        this.router.navigate(['']);  // Redirect to employee list
+        this.router.navigate(['']);
       },
       error: (error) => {
         console.error('Error updating employee:', error);
-      }
+      },
     });
   }
 }

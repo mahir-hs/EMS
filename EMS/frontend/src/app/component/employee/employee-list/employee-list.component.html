@@ -27,7 +27,6 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Loop through paginatedEmployees for pagination -->
       <tr *ngFor="let employee of paginatedEmployees">
         <td>{{ employee.id }}</td>
         <td>{{ employee.firstName }}</td>
@@ -46,7 +45,7 @@
     </tbody>
   </table>
 
-  <!-- Pagination Controls -->
+
   <div *ngIf="employees.length > itemsPerPage" class="pagination">
     <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
