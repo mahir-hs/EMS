@@ -8,23 +8,23 @@ using NpgsqlTypes;
 
 namespace api.Repository
 {
-    public class EmployeeAttendanceRepository(IPgContext pg, IDapperContext sql) : IEmployeeAttendanceRepository
+    public class EmployeeAttendanceRepository(IFactoryDbContext context) : IEmployeeAttendanceRepository
     {
-        private readonly IPgContext _pg = pg;
-        private readonly IDapperContext _sql = sql;
+
+        private readonly IFactoryDbContext _context = context;
         public async Task AddAttendanceAsync(EmployeeAttendance attendance)
         {
             if (attendance == null)
                 throw new ArgumentNullException(nameof(attendance), "Attendance cannot be null.");
 
-            using var sqlCon = _sql.CreateConnection();
+            using var sqlCon = _context.SqlConnection();
 
             var getResult = await sqlCon.QuerySingleOrDefaultAsync<Employee>(
                 "dbo.GetEmployeeById",
                 new { Id = attendance.EmployeeId }, 
                 commandType: CommandType.StoredProcedure
             ) ?? throw new Exception($"Employee with ID {attendance.EmployeeId} does not exist.");
-            using var pgCon = _pg.CreateConnection();
+            using var pgCon = _context.PgConnection();
 
             var parameters = new DynamicParameters();
             parameters.Add("p_employee_id", attendance.EmployeeId);
@@ -38,7 +38,7 @@ namespace api.Repository
 
         public async Task<IEnumerable<EmployeeAttendance>> GetAllAttendanceAsync()
         {
-            using var pgCon = _pg.CreateConnection();
+            using var pgCon = _context.PgConnection();
             var attendanceRecords = await pgCon.QueryAsync<EmployeeAttendance>("select * from public.getallemployeeattendance()");
 
             foreach (var record in attendanceRecords)
@@ -52,11 +52,11 @@ namespace api.Repository
 
         public async Task<EmployeeAttendance?> GetAttendanceByEmployeeIdAsync(int employeeId)
         {
-            using var sqlCon = _sql.CreateConnection();
+            using var sqlCon = _context.SqlConnection();
             var getResult = await sqlCon.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { employeeId }, commandType: CommandType.StoredProcedure);
             if (getResult != null)
             {
-                using var pgCon = _pg.CreateConnection();
+                using var pgCon = _context.PgConnection();
                 return await pgCon.QueryFirstOrDefaultAsync<EmployeeAttendance>("GetAttendanceByEmployeeId", new { employeeId }, commandType: CommandType.StoredProcedure);
 
             }
@@ -66,7 +66,7 @@ namespace api.Repository
         public async Task<EmployeeAttendance?> GetAttendanceByAttendanceIdAsync(int attendanceId)
         {
             
-            using var pgCon = _pg.CreateConnection();
+            using var pgCon = _context.PgConnection();
             var parametars = new DynamicParameters();
             parametars.Add("p_attendance_id",attendanceId);
             return await pgCon.QueryFirstOrDefaultAsync<EmployeeAttendance>("select * from getattendancebyid(@p_attendance_id)", parametars);
@@ -76,7 +76,7 @@ namespace api.Repository
         public async Task UpdateAttendanceAsync(int id,EmployeeAttendance attendance)
         {
            
-            using var pgCon = _pg.CreateConnection();
+            using var pgCon = _context.PgConnection();
             var parametars = new DynamicParameters();
               
             parametars.Add("p_attendance_id",id);

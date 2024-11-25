@@ -8,14 +8,14 @@ using Dapper;
 
 namespace api.Repository
 {
-    public class DesignationRepository(IDapperContext context, IOperationLogService operationLogService) : IDesignationRepository
+    public class DesignationRepository(IFactoryDbContext context, IOperationLogService operationLogService) : IDesignationRepository
     {
-        private readonly IDapperContext _context = context;
+        private readonly IFactoryDbContext _context = context;
         private readonly IOperationLogService _operationLogService = operationLogService;
 
         public async Task<Designation?> AddAsync(Designation entity)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             con.Open();
             using var transaction = con.BeginTransaction();
 
@@ -55,7 +55,7 @@ namespace api.Repository
 
         public async Task<Designation?> DeleteAsync(int id)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             con.Open();
             using var transaction = con.BeginTransaction();
 
@@ -93,19 +93,19 @@ namespace api.Repository
 
         public async Task<IEnumerable<Designation?>> GetAllAsync()
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             return await con.QueryAsync<Designation>("dbo.GetAllDesignations", commandType: CommandType.StoredProcedure);
         }
 
         public async Task<Designation?> GetByIdAsync(int id)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             return await con.QueryFirstOrDefaultAsync<Designation>("dbo.GetDesignationById", new { id }, commandType: CommandType.StoredProcedure);
         }
 
         public async Task<Designation?> UpdateAsync(int id, Designation entity)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             con.Open();
             using var transaction = con.BeginTransaction();
 

@@ -14,14 +14,14 @@ using Microsoft.OpenApi.Models;
 
 namespace api.Repository
 {
-    public class EmployeeRepository(IDapperContext context, IOperationLogService operationLogService) : IEmployeeRepository
+    public class EmployeeRepository(IFactoryDbContext context, IOperationLogService operationLogService) : IEmployeeRepository
     {
-        private readonly IDapperContext _context = context;
+        private readonly IFactoryDbContext _context = context;
         private readonly IOperationLogService _operationLogService = operationLogService;
 
         public async Task<Employee?> AddAsync(Employee entity)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             con.Open();
             using var transaction = con.BeginTransaction();
 
@@ -74,7 +74,7 @@ namespace api.Repository
 
         public async Task<Employee?> UpdateAsync(int id, Employee entity)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             con.Open();
             using var transaction = con.BeginTransaction();
 
@@ -126,7 +126,7 @@ namespace api.Repository
 
         public async Task<Employee?> DeleteAsync(int id)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             con.Open();
             using var transaction = con.BeginTransaction();
 
@@ -169,13 +169,13 @@ namespace api.Repository
 
         public async Task<IEnumerable<Employee?>> GetAllAsync()
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             return await con.QueryAsync<Employee>("dbo.GetAllEmployees", commandType: CommandType.StoredProcedure);
         }
 
         public async Task<Employee?> GetByIdAsync(int Id)
         {
-            using var con = _context.CreateConnection();
+            using var con = _context.SqlConnection();
             return await con.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { Id }, commandType: CommandType.StoredProcedure);
         }
     }

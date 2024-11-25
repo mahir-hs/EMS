@@ -5,9 +5,9 @@ using MongoDB.Driver;
 
 namespace api.Repository
 {
-    public class OperationLogRepository(IMongoContext context) : IOperationLogRepository
+    public class OperationLogRepository(IFactoryDbContext context) : IOperationLogRepository
     {
-        private readonly IMongoCollection<OperationLog> _context = context.Database.GetCollection<OperationLog>("OperationLogs");
+        private readonly IMongoCollection<OperationLog> _context = context.MongoConnection.GetCollection<OperationLog>("OperationLogs");
         public async Task<IEnumerable<OperationLog>> GetAllLogsAsync()
         {
             return await _context.Find(_=>true).ToListAsync();

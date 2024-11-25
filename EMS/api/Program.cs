@@ -9,9 +9,11 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IDapperContext,SqlServerDapperContext>();
-builder.Services.AddSingleton<IMongoContext,MongoDbContext>();
-builder.Services.AddSingleton<IPgContext, PgServerDapperContext>();
+builder.Services.AddSingleton<IFactoryDbContext, FactoryDbContext>();
+
+//builder.Services.AddSingleton<IDapperContext,SqlServerDapperContext>();
+//builder.Services.AddSingleton<IMongoContext,MongoDbContext>();
+//builder.Services.AddSingleton<IPgContext, PgServerDapperContext>();
 
 builder.Services.AddScoped<IEmployeeService,EmployeeService>();
 builder.Services.AddScoped<IDesignationService,DesignationService>();
