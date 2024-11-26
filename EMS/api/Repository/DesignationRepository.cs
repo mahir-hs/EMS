@@ -29,14 +29,13 @@ namespace api.Repository
 
                 if (designation != null)
                 {
-                    var logDetails = OperationLogHelper.CreateInsertDetails(designation);
                     var log = new OperationLog
                     {
                         OperationType = "Insert",
                         EntityName = "Designation",
                         EntityId = designation.Id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = logDetails
+                        OperationDetails = OperationLogHelper.CreateInsertDetails(designation)
                     };
 
                     await _operationLogService.LogOperationAsync(log);
@@ -69,14 +68,13 @@ namespace api.Repository
 
                 if (designation != null)
                 {
-                    var logDetails = OperationLogHelper.CreateDeleteDetails(designation);
                     var log = new OperationLog
                     {
                         OperationType = "Delete",
                         EntityName = "Designation",
                         EntityId = designation.Id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = logDetails
+                        OperationDetails = OperationLogHelper.CreateDeleteDetails(designation)
                     };
                     await _operationLogService.LogOperationAsync(log);
                     transaction.Commit();
@@ -120,14 +118,13 @@ namespace api.Repository
 
                 if (designation != null)
                 {
-                    var logDetails = OperationLogHelper.CreateUpdateDetails(oldEntity, designation);
                     var log = new OperationLog
                     {
                         OperationType = "Update",
                         EntityName = "Designation",
                         EntityId = designation.Id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = logDetails
+                        OperationDetails = OperationLogHelper.CreateUpdateDetails(oldEntity, designation)
                     };
                     await _operationLogService.LogOperationAsync(log);
                     transaction.Commit();

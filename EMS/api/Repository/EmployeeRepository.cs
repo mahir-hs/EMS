@@ -46,14 +46,13 @@ namespace api.Repository
 
                 if (employee != null)
                 {
-                    var logDetails = OperationLogHelper.CreateInsertDetails(employee);
                     var log = new OperationLog
                     {
                         OperationType = "Insert",
                         EntityName = "Employee",
                         EntityId = employee.Id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = logDetails
+                        OperationDetails = OperationLogHelper.CreateInsertDetails(employee)
                     };
 
 
@@ -102,14 +101,13 @@ namespace api.Repository
 
                 if (updatedEmployee != null)
                 {
-                    var logDetails = OperationLogHelper.CreateUpdateDetails(oldEntity, updatedEmployee);
                     var log = new OperationLog
                     {
                         OperationType = "Update",
                         EntityName = "Employee",
                         EntityId = updatedEmployee.Id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = logDetails
+                        OperationDetails = OperationLogHelper.CreateUpdateDetails(oldEntity, updatedEmployee)
                     };
                     await _operationLogService.LogOperationAsync(log);
                     transaction.Commit();
@@ -143,7 +141,6 @@ namespace api.Repository
 
                 if (deletedEmployee != null)
                 {
-                    var logDetails = OperationLogHelper.CreateDeleteDetails(deletedEmployee);
 
                     var log = new OperationLog
                     {
@@ -151,7 +148,7 @@ namespace api.Repository
                         EntityName = "Employee",
                         EntityId = id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = logDetails
+                        OperationDetails = OperationLogHelper.CreateDeleteDetails(deletedEmployee)
                     };
                     await _operationLogService.LogOperationAsync(log);
                     

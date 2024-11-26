@@ -17,9 +17,7 @@ namespace api.Services
         
         public async Task<EmployeeDto> AddAsync(EmployeeCreateDto entity)
         {
-            
-            var data = entity.ToEmployee();
-            var fetch = await _context.AddAsync(data);
+            var fetch = await _context.AddAsync(entity.ToEmployee());
             var toDto = fetch.ToEmployeeDto();
             return toDto;
 

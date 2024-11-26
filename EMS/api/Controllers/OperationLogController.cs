@@ -14,16 +14,14 @@ namespace api.Controllers
         [Route("all")]
         public async Task<IActionResult> GetAll()
         {
-            var fetch = await _context.GetAllLogsAsync();
-            return Ok(fetch);
+            return Ok(await _context.GetAllLogsAsync());
         }
 
         [HttpGet]
         [Route("get-employee")]
-        public async Task<IActionResult> GetEmployee(int id)
+        public async Task<IActionResult> GetEmployee([FromQuery] int id)
         {
-            var fetch = await _context.GetLogsForEmployeeAsync(id);
-            return Ok(fetch);
+            return Ok(await _context.GetLogsForEmployeeAsync(id));
         }
     }
 }

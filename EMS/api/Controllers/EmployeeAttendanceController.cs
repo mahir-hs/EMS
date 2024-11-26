@@ -20,7 +20,7 @@ namespace api.Controllers
 
         [HttpGet]
         [Route("get")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get([FromQuery] int id)
         {
             return Ok(await _context.GetAttendanceAsync(id));
         }
@@ -38,7 +38,6 @@ namespace api.Controllers
         [Route("update")]
         public async Task<OkResult> Update([FromQuery] int id,[FromBody] EmployeeAttendanceUpdateDto dto)
         {
-            Console.WriteLine(id);
             await _context.UpdateAttendanceAsync(id,dto);
             return Ok();
         }
