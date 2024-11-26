@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../../service/employee.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DepartmentService } from '../../../service/department.service';
+import { DesignationService } from '../../../service/designation.service';
 
 @Component({
   selector: 'app-employee-update',
@@ -14,7 +16,6 @@ import { FormsModule } from '@angular/forms';
 export class EmployeeUpdateComponent implements OnInit {
   employeeId: number = 0;
 
-  // Explicitly define employee type based on DTO
   employee = {
     firstName: '',
     lastName: '',
@@ -25,16 +26,50 @@ export class EmployeeUpdateComponent implements OnInit {
     departmentId: null,
     designationId: null,
   };
+  designation: any[] = [];
+  department: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
+    private designationService: DesignationService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.employeeId = +this.route.snapshot.paramMap.get('id')!;
     this.getEmployeeDetails();
+    this.getDepartment();
+    this.getDesignation();
+  }
+
+  getDepartment(): void {
+    this.departmentService.getAll().subscribe({
+      next: (data) => {
+        this.department = data.map((dept: any) => ({
+          id: dept.id,
+          name: dept.dept,
+        }));
+      },
+      error: (err) => {
+        console.log('Error fetching department: ', err);
+      },
+    });
+  }
+
+  getDesignation(): void {
+    this.designationService.getAll().subscribe({
+      next: (data) => {
+        this.designation = data.map((desig: any) => ({
+          id: desig.id,
+          name: desig.role,
+        }));
+      },
+      error: (err) => {
+        console.log('Error fetching designation: ', err);
+      },
+    });
   }
 
   getEmployeeDetails(): void {

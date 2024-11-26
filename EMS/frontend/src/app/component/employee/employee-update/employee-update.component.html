@@ -28,28 +28,37 @@
     </div>
 
     <div class="form-group">
-  <label for="dateOfBirth">Date of Birth</label>
-  <input
-    type="date"
-    id="dateOfBirth"
-    [(ngModel)]="employee.dateOfBirth"
-    name="dateOfBirth"
-    required
-  />
-</div>
-
+      <label for="dateOfBirth">Date of Birth</label>
+      <input
+        type="date"
+        id="dateOfBirth"
+        [(ngModel)]="employee.dateOfBirth"
+        name="dateOfBirth"
+        required
+      />
+    </div>
 
     <div class="form-group">
       <label for="departmentId">Department</label>
-      <input type="number" id="departmentId" [(ngModel)]="employee.departmentId" name="departmentId" />
+      <select id="departmentId" [(ngModel)]="employee.departmentId" name="departmentId" required>
+        <option value="" disabled>Select Department</option>
+        <option *ngFor="let dept of department" [value]="dept.id">{{ dept.name }}</option>
+      </select>
     </div>
 
     <div class="form-group">
       <label for="designationId">Designation</label>
-      <input type="number" id="designationId" [(ngModel)]="employee.designationId" name="designationId" />
+      <select id="designationId" [(ngModel)]="employee.designationId" name="designationId" required>
+        <option value="" disabled>Select Designation</option>
+        <option *ngFor="let desig of designation" [value]="desig.id">{{ desig.name }}</option>
+      </select>
     </div>
 
-    <button class="submit-btn" type="submit" [disabled]="!employee.firstName || !employee.lastName || !employee.email || !employee.phone || !employee.address || !employee.dateOfBirth">
+    <button
+      class="submit-btn"
+      type="submit"
+      [disabled]="!employee.firstName || !employee.lastName || !employee.email || !employee.phone || !employee.address || !employee.dateOfBirth || !employee.departmentId || !employee.designationId"
+    >
       Update Employee
     </button>
   </form>
