@@ -44,3 +44,7 @@ select {
 .submit-btn:disabled {
   background-color: #cccccc;
 }
+.error-text {
+  color: red;
+  font-size: 12px;
+}

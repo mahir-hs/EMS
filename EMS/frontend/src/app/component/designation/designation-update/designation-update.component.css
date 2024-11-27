@@ -1,11 +1,12 @@
-/* Container Styling */
 .designation-update-container {
   max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
+  margin: 110px auto;
+  padding: 50px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
 }
 
 h1 {
@@ -15,24 +16,12 @@ h1 {
   font-size: 1.8rem;
 }
 
-/* Form Styling */
-.update-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 
 .form-group {
   display: flex;
   flex-direction: column;
 }
 
-label {
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #555;
-}
 
 input {
   padding: 10px;
@@ -48,7 +37,6 @@ input:focus {
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
-/* Buttons Styling */
 .form-actions {
   display: flex;
   justify-content: space-between;
@@ -56,6 +44,7 @@ input:focus {
 }
 
 button {
+  margin-top: 10px;
   padding: 10px 15px;
   font-size: 1rem;
   font-weight: bold;
@@ -81,4 +70,9 @@ button {
 
 .cancel-btn:hover {
   background-color: #d32f2f;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
 }

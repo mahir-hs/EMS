@@ -1,21 +1,23 @@
 <div class="designation-update-container">
-  <h1>Update Designation</h1>
+  <h1 class="form-title">Update Designation</h1>
 
-  <form (ngSubmit)="updataDesignation()" class="update-form">
+  <form [formGroup]="designationForm" (ngSubmit)="updataDesignation()" class="update-form">
     <div class="form-group">
-      <label for="role">Role</label>
       <input
         type="text"
         id="role"
-        [(ngModel)]="designation.role"
-        name="role"
+        formControlName="role"
         required
         placeholder="Enter the designation role"
       />
+      <div *ngIf="designationForm.get('role')?.invalid && designationForm.get('role')?.touched">
+        <small class="error-text">Role is required.</small>
+      </div>
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="save-btn">Save Changes</button>
+      <button type="submit" class="save-btn" [disabled]="designationForm.invalid">Save Changes</button>
+      <button type="button" class="cancel-btn" (click)="cancelDesignation()">cancel</button>
     </div>
   </form>
 </div>

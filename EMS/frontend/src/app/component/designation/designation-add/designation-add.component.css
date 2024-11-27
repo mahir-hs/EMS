@@ -1,86 +1,78 @@
-.designation-container {
+.designation-add-container {
   max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-  background: linear-gradient(145deg, #1e1e2f, #252537);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  color: #ffffff;
+  margin: 110px auto;
+  padding: 50px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   text-align: center;
 }
 
-.designation-container h1 {
-  font-size: 2rem;
+h1 {
+  text-align: center;
+  color: #333;
   margin-bottom: 20px;
-  color: #00e6e6;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-size: 1.8rem;
 }
 
-.designation-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
 .form-group {
   display: flex;
   flex-direction: column;
-  text-align: left;
 }
 
-.form-group label {
-  font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 5px;
-}
 
-.form-group input {
+input {
   padding: 10px;
   font-size: 1rem;
-  border: 2px solid #00e6e6;
+  border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  transition: 0.3s;
+  transition: border-color 0.3s ease;
 }
 
-.form-group input:focus {
-  border-color: #00bebe;
-  box-shadow: 0 0 10px #00bebe;
+input:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
-.submit-btn {
-  background: #00e6e6;
-  color: #1e1e2f;
-  font-size: 1.2rem;
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  font-size: 1rem;
   font-weight: bold;
-  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.submit-btn:hover {
-  background: #00bebe;
-  box-shadow: 0 0 10px #00bebe, 0 0 20px #00bebe;
-  transform: scale(1.05);
+.save-btn {
+  background-color: #4caf50;
+  color: white;
 }
 
-.submit-btn:active {
-  transform: scale(0.95);
+.save-btn:hover {
+  background-color: #45a049;
 }
 
-@media (max-width: 768px) {
-  .designation-container {
-    padding: 15px;
-  }
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
 
-  .designation-form {
-    gap: 15px;
-  }
+.cancel-btn:hover {
+  background-color: #d32f2f;
+}
 
-  .submit-btn {
-    font-size: 1rem;
-  }
+.error-text {
+  color: red;
+  font-size: 12px;
 }

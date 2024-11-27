@@ -1,31 +1,58 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { DepartmentService } from '../../../service/department.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-department-add',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule, ReactiveFormsModule, CommonModule],
   templateUrl: './department-add.component.html',
-  styleUrl: './department-add.component.css'
+  styleUrl: './department-add.component.css',
 })
-export class DepartmentAddComponent {
-  department = {
-    dept:''
-  };
+export class DepartmentAddComponent implements OnInit {
+  // department = {
+  //   dept: '',
+  // };
 
-  constructor(private departmentService:DepartmentService,private router:Router){}
+  departmentForm!: FormGroup;
 
-  addDepartment():void{
-    this.departmentService.add(this.department).subscribe({
-      next:()=>{
-        this.router.navigate(['department-list']);
-      },
-      error:(err)=>{
-        console.error('Error adding Department',err);
-      }
-    })
+  constructor(
+    private departmentService: DepartmentService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
   }
 
+  initForm(): void {
+    this.departmentForm = this.fb.group({
+      dept: ['', [Validators.required]],
+    });
+  }
+
+  addDepartment(): void {
+    this.departmentService.add(this.departmentForm.value).subscribe({
+      next: () => {
+        this.router.navigate(['department-list']);
+      },
+      error: (err) => {
+        console.error('Error adding Department', err);
+      },
+    });
+  }
+
+  cancelDepartment(): void {
+    this.departmentForm.reset();
+    this.router.navigate(['department-list']);
+  }
 }

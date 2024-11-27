@@ -1,117 +1,83 @@
-/* General Body Setup */
+/* Base Styles */
 body {
-  background: linear-gradient(135deg, #2a2a72, #009ffd);
   font-family: 'Roboto', sans-serif;
-  min-height: 100vh;
-  margin-top: 100px; /* To avoid overlap with the navbar */
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
-/* Container for Form */
 .employee-form-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 30px;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.5);
-  color: white;
-  animation: fadeIn 1s ease-in-out;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Title */
 .form-title {
-  font-size: 2rem;
+  margin-bottom: 20px;
+  font-size: 1.5em;
   text-align: center;
-  margin-bottom: 30px;
-  color: #00f9ff;
-  font-weight: bold;
-  text-transform: uppercase;
+  color: #444;
 }
 
-/* Form Elements */
-.employee-form {
+/* Form Styles */
+.form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-/* Form Group */
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
 }
 
 label {
-  font-size: 16px;
-  color: #ddd;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
-input {
+input,
+select {
   padding: 10px;
-  font-size: 16px;
-  border: 2px solid #00f9ff;
-  background: transparent;
-  color: white;
-  border-radius: 10px;
-  transition: 0.3s ease;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
 }
 
-input:focus {
-  border-color: #ff0080;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Submit Button */
-.submit-btn {
-  background-color: #00f9ff;
-  border: none;
-  padding: 12px 20px;
-  font-size: 18px;
-  color: black;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 30px;
-  margin-top: 20px;
-}
-
-.submit-btn:hover {
-  background-color: #ff0080;
-  transform: scale(1.05);
-}
-
-/* Input Focus Animation */
-input:focus {
+input:focus,
+select:focus {
+  border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
 }
 
-/* Fade-In Effect for the Form */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+small.error-text {
+  color: #d9534f;
+  font-size: 0.9em;
+  margin-top: 4px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .employee-form-container {
-    padding: 20px;
-    margin: 20px;
-  }
+/* Button Styles */
+.btn {
+  padding: 12px;
+  font-size: 1em;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
 
-  .form-title {
-    font-size: 1.5rem;
-  }
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 
-  input, .submit-btn {
-    font-size: 14px;
-    padding: 8px;
-  }
+.btn:not(:disabled):hover {
+  background: #0056b3;
 }
