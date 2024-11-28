@@ -31,7 +31,6 @@ namespace api.Mappers
 
             return new EmployeeAttendance
             {
-                EmployeeId = dto.EmployeeId,
                 CheckInTime = dto.CheckInTime,
             };
         }
@@ -50,29 +49,6 @@ namespace api.Mappers
             attendance.CheckInTime = dto.CheckInTime;
             if (dto.CheckOutTime.HasValue) attendance.CheckOutTime = dto.CheckOutTime.Value;
             return attendance;
-        }
-
-        public static EmployeeWithAttendanceDto ToEmployeeWithAttendanceDto(this Employee employee, List<EmployeeAttendance> attendances)
-        {
-            if (employee == null)
-            {
-                throw new ArgumentNullException(nameof(employee), "Employee cannot be null.");
-            }
-
-            return new EmployeeWithAttendanceDto
-            {
-                Id = employee.Id,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                Email = employee.Email,
-                Phone = employee.Phone,
-                Address = employee.Address,
-                DateOfBirth = employee.DateOfBirth,
-                IsDeleted = employee.IsDeleted,
-                DepartmentId = employee.DepartmentId,
-                DesignationId = employee.DesignationId,
-                Attendances = attendances?.Select(a => a.ToEmployeeAttendanceDto()).ToList()
-            };
         }
     }
 }

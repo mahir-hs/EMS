@@ -10,9 +10,9 @@ namespace api.Services
     {
         private readonly IEmployeeAttendanceRepository _context = context;
 
-        public async Task AddAttendanceAsync(EmployeeAttendanceCreateDto attendanceDto)
+        public async Task AddAttendanceAsync(int id,EmployeeAttendanceCreateDto attendanceDto)
         {
-            await _context.AddAttendanceAsync(attendanceDto.ToEmployeeAttendance());
+            await _context.AddAttendanceAsync(id,attendanceDto.ToEmployeeAttendance());
             return;
         }
 
@@ -26,18 +26,10 @@ namespace api.Services
 
         
 
-        public async Task<EmployeeWithAttendanceDto> GetEmployeeWithAttendanceAsync(int employeeId)
-        {
-            //var fetch =  await _context.GetAttendanceByEmployeeIdAsync(employeeId);
-            //return fetch!.To();
-            return  new EmployeeWithAttendanceDto();
-        }
-
         public async Task<IEnumerable<EmployeeAttendanceDto>> GetAllAttendanceAsync()
         {
             var employeeAttendances = await _context.GetAllAttendanceAsync();
 
-            // Map EmployeeAttendance to EmployeeAttendanceDto
             return employeeAttendances.Select(ea => new EmployeeAttendanceDto
             {
                 Id = ea.Id,
@@ -49,10 +41,27 @@ namespace api.Services
 
         }
 
-        public async Task<EmployeeAttendanceDto> GetAttendanceAsync(int attendanceID)
+       
+
+        public async Task<IEnumerable<EmployeeAttendanceDto>> GetAllUserAttendance(int id)
         {
-            var fetch =  await _context.GetAttendanceByAttendanceIdAsync(attendanceID);
-            return fetch.ToEmployeeAttendanceDto();
+            var employeeAttendances = await _context.GetAllUserAttendance(id);
+
+            return employeeAttendances.Select(ea => new EmployeeAttendanceDto
+            {
+                Id = ea.Id,
+                EmployeeId = ea.EmployeeId,
+                CheckInTime = ea.CheckInTime,
+                CheckOutTime = ea.CheckOutTime
+
+            });
+        }
+
+        public async Task<EmployeeAttendanceDto> GetAttendanceByAttendanceId(int id)
+        {
+            var employeeAttendance = await _context.GetAttendanceByAttendanceIdAsync(id);
+            return employeeAttendance.ToEmployeeAttendanceDto();
+
         }
     }
 }

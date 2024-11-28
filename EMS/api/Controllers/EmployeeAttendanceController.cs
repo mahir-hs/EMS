@@ -20,17 +20,17 @@ namespace api.Controllers
 
         [HttpGet]
         [Route("get")]
-        public async Task<IActionResult> Get([FromQuery] int id)
+        public async Task<IActionResult> GetUserAttendance([FromQuery] int id)
         {
-            return Ok(await _context.GetAttendanceAsync(id));
+            return Ok(await _context.GetAllUserAttendance(id));
         }
 
 
         [HttpPost]
         [Route("add")]
-        public async Task<OkResult> Add([FromBody] EmployeeAttendanceCreateDto dto)
+        public async Task<OkResult> Add([FromQuery] int id,[FromBody] EmployeeAttendanceCreateDto dto)
         {
-            await _context.AddAttendanceAsync(dto);
+            await _context.AddAttendanceAsync(id,dto);
             return Ok();
         }
 
@@ -40,6 +40,13 @@ namespace api.Controllers
         {
             await _context.UpdateAttendanceAsync(id,dto);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("get-single")]
+        public async Task<IActionResult> GetSingleAttendance([FromQuery] int id)
+        {
+            return Ok(await _context.GetAttendanceByAttendanceId(id));
         }
 
 

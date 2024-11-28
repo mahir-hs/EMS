@@ -23,5 +23,7 @@ namespace api.Controllers
         {
             return Ok(await _context.GetLogsForEmployeeAsync(id));
         }
+
+
     }
 }
