@@ -34,16 +34,22 @@
       <tr *ngFor="let log of paginatedLogs">
         <td>{{ log.operationType }}</td>
         <td>{{ log.entityName }}</td>
-        <td><pre>{{ log.operationDetails | jsonPrettyPrint }}</pre></td>
-        <td>{{ log.timeStamp | date: 'short' }}</td>
+        <td>
+          <pre>{{ log.operationDetails | jsonPrettyPrint }}</pre>
+        </td>
+        <td>{{ log.timeStamp | date : "short" }}</td>
       </tr>
     </tbody>
   </table>
 
   <!-- Pagination Controls -->
   <div *ngIf="!loading && filteredLogs.length > 0" class="pagination">
-    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <button (click)="previousPage()" [disabled]="currentPage === 1">
+      Previous
+    </button>
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next
+    </button>
   </div>
 </div>

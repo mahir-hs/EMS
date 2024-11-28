@@ -1,0 +1,46 @@
+<div class="logs-container">
+  <h1>User Logs</h1>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <p>Loading...</p>
+  </div>
+
+  <!-- No Logs Found Message -->
+  <div *ngIf="!loading && paginatedLogs.length === 0" class="empty-state">
+    <p>No logs found</p>
+  </div>
+
+  <!-- Table of Logs -->
+  <table *ngIf="!loading && paginatedLogs.length > 0" class="logs-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Entity</th>
+        <th>Details</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of paginatedLogs">
+        <td>{{ log.operationType }}</td>
+        <td>{{ log.entityName }}</td>
+        <td>
+          <pre>{{ log.operationDetails | jsonPrettyPrint }}</pre>
+        </td>
+        <td>{{ log.timeStamp | date : "short" }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="!loading && logs.length > 0" class="pagination">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">
+      Previous
+    </button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next
+    </button>
+  </div>
+</div>

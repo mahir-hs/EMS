@@ -1,110 +1,213 @@
-/* General page styling */
+/* General Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
   color: #333;
 }
 
-h1, h2 {
-  color: #333;
-  font-weight: normal;
-}
-
-/* Loading and empty states */
+/* Loading State */
 .loading-container {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #fff;
+  color: #007bff;
   font-size: 1.2rem;
-  color: #777;
 }
 
+/* Empty State */
 .empty-state {
   text-align: center;
-  padding: 20px;
 }
 
-.empty-state h2 {
-  font-size: 1.5rem;
+.empty-state p {
+  font-size: 1.2rem;
   color: #555;
 }
 
-.cta-btn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
+.empty-state a {
   font-size: 1rem;
+  color: #007bff;
+  text-decoration: none;
 }
 
-.cta-btn:hover {
-  background-color: #45a049;
+.empty-state a:hover {
+  text-decoration: underline;
 }
 
-/* Employee table styling */
-.employee-container {
-  margin-top: 20px;
+/* Add Employee Button */
+.add-employee-btn {
+  background-color: #007bff; /* Blue color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-block;
+  margin-bottom: 20px;
+  text-align: center;
+  text-decoration: none; /* Remove underline from link */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition for hover effect */
+}
+
+.add-employee-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: scale(1.05); /* Slight scale effect */
+}
+
+.add-employee-btn:focus {
+  outline: none; /* Remove focus outline */
+}
+
+
+/* Employee List */
+.employee-list {
+  padding-top: 20px;
 }
 
 .employee-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
 }
 
 .employee-table th,
 .employee-table td {
-  padding: 12px;
+  padding: 10px;
   text-align: left;
+  border: 1px solid #ddd;
 }
 
 .employee-table th {
-  background-color: #f1f1f1;
+  background-color: #f2f2f2;
 }
 
-.employee-table td {
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.employee-table tr:hover {
-  background-color: #fafafa;
-}
-
-/* Action buttons for Edit and Delete */
-.action-btn {
-  background-color: #007bff;
+.employee-table td button {
   color: white;
-  padding: 5px 10px;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+}
+
+.employee-table td button i {
   margin-right: 5px;
+}
+
+/* Button Colors and Icons */
+.attendance-btn {
+  background-color: #17a2b8;
+}
+
+.attendance-btn:hover {
+  background-color: #138496;
+}
+
+.update-btn {
+  background-color: #ffc107;
+}
+
+.update-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.logs-btn {
+  background-color: #28a745;
+}
+
+.logs-btn:hover {
+  background-color: #218838;
+}
+
+/* Add Employee Button */
+.cta-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  font-size: 0.9rem;
   cursor: pointer;
-}
-
-.action-btn:hover {
-  background-color: #0056b3;
-}
-
-.action-btn:active {
-  background-color: #003d7a;
-}
-.pagination {
-  margin: 20px 0;
+  font-size: 1rem;
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
   text-align: center;
 }
 
+.cta-btn:hover {
+  background-color: #218838;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 .pagination button {
-  margin: 0 5px;
-  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
   cursor: pointer;
+  font-size: 1rem;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
 }
 
 .pagination span {
-  margin: 0 10px;
-  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.pagination button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .employee-table th, .employee-table td {
+    padding: 8px;
+  }
+
+  .pagination {
+    flex-direction: column;
+  }
+
+  .cta-btn {
+    margin-bottom: 15px;
+  }
 }

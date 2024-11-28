@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DepartmentService } from '../../../service/department.service';
 import { DesignationService } from '../../../service/designation.service';
+import { AttendanceService } from '../../../service/attendance.service';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
@@ -25,7 +26,8 @@ export class EmployeeListComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
-    private designationService: DesignationService
+    private designationService: DesignationService,
+    private attendanceService: AttendanceService
   ) {}
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AttendanceService } from '../../../service/attendance.service';  // Import the attendance service
+import { AttendanceService } from '../../../service/attendance.service'; // Import the attendance service
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -7,9 +7,9 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-attendance-list',
   standalone: true,
-  imports: [CommonModule,RouterModule,FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './attendance-list.component.html',
-  styleUrls: ['./attendance-list.component.css']
+  styleUrls: ['./attendance-list.component.css'],
 })
 export class AttendanceListComponent implements OnInit {
   attendanceRecords: any[] = [];
@@ -23,7 +23,7 @@ export class AttendanceListComponent implements OnInit {
   }
 
   fetchAttendance(): void {
-    this.attendanceService.getAllAttendance().subscribe({
+    this.attendanceService.getAll().subscribe({
       next: (data) => {
         this.attendanceRecords = data;
         this.filteredAttendance = data;
@@ -32,13 +32,13 @@ export class AttendanceListComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching attendance records:', err);
         this.loading = false;
-      }
+      },
     });
   }
 
   filterAttendance(): void {
     if (this.searchText) {
-      this.filteredAttendance = this.attendanceRecords.filter(record =>
+      this.filteredAttendance = this.attendanceRecords.filter((record) =>
         record.employeeId.toString().includes(this.searchText)
       );
     } else {

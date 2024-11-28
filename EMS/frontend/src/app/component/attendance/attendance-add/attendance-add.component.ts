@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AttendanceService } from '../../../service/attendance.service';
-import { Router } from '@angular/router';
-import { EmployeeService } from '../../../service/employee.service';
-import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
@@ -15,16 +14,17 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class AttendanceAddComponent implements OnInit {
   attendance = {
-    employeeId: 0,
     checkInTime: new Date(),
   };
 
   employees: any[] = [];
-  selectedEmployeeId: number = 0;
+  employeeId: number = 0;
 
   constructor(
+    private location: Location,
     private attendanceService: AttendanceService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -32,47 +32,33 @@ export class AttendanceAddComponent implements OnInit {
   }
 
   getEmployees(): void {
-    this.attendanceService.getAllEmployee().subscribe({
-      next: (data) => {
-        this.employees = data;
-        console.log(this.employees);
-      },
-      error: (err) => {
-        console.error('Error fetching employees:', err);
-      },
-    });
-  }
-
-  onEmployeeChange(): void {
-    this.attendance.employeeId = this.selectedEmployeeId;
+    this.employeeId = +this.route.snapshot.paramMap.get('id')!;
   }
 
   addAttendance(): void {
-    if (!this.attendance.checkInTime || !this.attendance.employeeId) {
-      console.error('Please provide both check-in time and EmployeeId.');
+    if (!this.attendance.checkInTime) {
+      console.error('Please provide both check-in time');
       return;
     }
-
-    if (this.selectedEmployeeId === 0) {
-      console.error('Please select an employee.');
-      return;
-    }
-
-    console.log(this.selectedEmployeeId);
 
     const attendanceData = {
-      employeeId: this.attendance.employeeId,
       checkInTime: this.attendance.checkInTime,
     };
 
-    this.attendanceService.addAttendance(attendanceData).subscribe({
-      next: (response) => {
-        console.log('Attendance added successfully:', response);
-        this.router.navigate(['/attendance-list']);
-      },
-      error: (err) => {
-        console.error('Error adding attendance:', err);
-      },
-    });
+    this.attendanceService
+      .addAttendance(this.employeeId, attendanceData)
+      .subscribe({
+        next: (response) => {
+          if (window.history.length > 1) this.location.back();
+          else this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error('Error adding attendance:', err);
+        },
+      });
+  }
+  cancelAttendance(): void {
+    if (window.history.length > 1) this.location.back();
+    else this.router.navigate(['/']);
   }
 }

@@ -1,15 +1,14 @@
 <div *ngIf="loading" class="loading-container">
-  <p>Loading employees...</p>
+  <p>Loading...</p>
 </div>
 
 <div *ngIf="!loading && employees.length === 0" class="empty-state">
-  <h2>No employees found.</h2>
-  <a [routerLink]="'/employee-add'" class="cta-btn">Add New Employee</a>
+  <p>No employees found. <a [routerLink]="'/employee-add'">Add New</a></p>
 </div>
 
-<div *ngIf="!loading && employees.length > 0" class="employee-container">
+<div *ngIf="!loading && employees.length > 0" class="employee-list">
   <h1>Employee Management</h1>
-  <a [routerLink]="'/employee-add'" class="cta-btn">Add Employee</a>
+  <a [routerLink]="'/employee-add'" class="add-employee-btn">Add Employee</a>
 
   <table class="employee-table">
     <thead>
@@ -23,7 +22,10 @@
         <th>Date of Birth</th>
         <th>Department</th>
         <th>Designation</th>
-        <th>Actions</th>
+        <th>Attendance</th>
+        <th>Logs</th>
+        <th>Update</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -38,17 +40,42 @@
         <td>{{ getDepartmentName(employee.departmentId) }}</td>
         <td>{{ getDesignationName(employee.designationId) }}</td>
         <td>
-          <button [routerLink]="['/employee-update', employee.id]" class="action-btn">Edit</button>
-          <button (click)="deleteEmployee(employee.id)" class="action-btn">Delete</button>
+          <button
+            [routerLink]="['/attendance-user', employee.id]"
+            class="attendance-btn"
+          >
+            <i class="fas fa-calendar-check"></i> Attendance
+          </button>
+        </td>
+        <td>
+          <button [routerLink]="['/log-user', employee.id]" class="logs-btn">
+            <i class="fas fa-file-alt"></i> Logs
+          </button>
+        </td>
+        <td>
+          <button
+            [routerLink]="['/employee-update', employee.id]"
+            class="update-btn"
+          >
+            <i class="fas fa-edit"></i> Edit
+          </button>
+        </td>
+        <td>
+          <button (click)="deleteEmployee(employee.id)" class="delete-btn">
+            <i class="fas fa-trash"></i> Delete
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 
-
   <div *ngIf="employees.length > itemsPerPage" class="pagination">
-    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <button (click)="previousPage()" [disabled]="currentPage === 1">
+      Previous
+    </button>
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next
+    </button>
   </div>
 </div>

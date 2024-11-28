@@ -3,20 +3,45 @@
 
   <div *ngIf="attendance">
     <form (ngSubmit)="updateAttendance()" #attendanceForm="ngForm">
-
       <div class="form-group">
         <label for="checkInTime">Check-In Time</label>
-        <input type="datetime-local" id="checkInTime" [(ngModel)]="attendance.checkInTime" name="checkInTime" class="form-control" required />
+        <input
+          type="datetime-local"
+          id="checkInTime"
+          [(ngModel)]="attendance.checkInTime"
+          name="checkInTime"
+          class="form-control"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label for="checkOutTime">Check-Out Time</label>
-        <input type="datetime-local" id="checkOutTime" [(ngModel)]="attendance.checkOutTime" name="checkOutTime" class="form-control" required />
+        <input
+          type="datetime-local"
+          id="checkOutTime"
+          [(ngModel)]="attendance.checkOutTime"
+          name="checkOutTime"
+          class="form-control"
+          required
+        />
       </div>
 
       <div class="form-actions">
-        <button type="submit" [disabled]="!attendanceForm.valid" class="btn btn-primary">Update Attendance</button>
-        <button type="button" (click)="cancelUpdate()" class="btn btn-secondary">Cancel</button>
+        <button
+          type="submit"
+          [disabled]="!attendanceForm.valid"
+          class="btn btn-primary"
+        >
+          Update Attendance
+        </button>
+        <button
+          type="button"
+          (click)="cancelUpdate()"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   </div>

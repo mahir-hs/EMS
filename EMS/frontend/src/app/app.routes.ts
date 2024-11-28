@@ -11,7 +11,10 @@ import { DesignationUpdateComponent } from './component/designation/designation-
 import { AttendanceAddComponent } from './component/attendance/attendance-add/attendance-add.component';
 import { AttendanceListComponent } from './component/attendance/attendance-list/attendance-list.component';
 import { AttendanceUpdateComponent } from './component/attendance/attendance-update/attendance-update.component';
-import { LogsComponent } from './component/logs/logs.component';
+
+import { AttendanceUserComponent } from './component/attendance/attendance-user/attendance-user.component';
+import { AllLogComponent } from './component/logs/all-log/all-log.component';
+import { UserLogComponent } from './component/logs/user-log/user-log.component';
 
 export const routes: Routes = [
   { path: '', component: EmployeeListComponent },
@@ -23,8 +26,10 @@ export const routes: Routes = [
   { path: 'designation-add', component: DesignationAddComponent },
   { path: 'designation-list', component: DesignationListComponent },
   { path: 'designation-update/:id', component: DesignationUpdateComponent },
-  { path: 'attendance-add', component: AttendanceAddComponent },
+  { path: 'attendance-add/:id', component: AttendanceAddComponent },
   { path: 'attendance-list', component: AttendanceListComponent },
   { path: 'attendance-update/:id', component: AttendanceUpdateComponent },
-  { path: 'logs', component: LogsComponent },
+  { path: 'attendance-user/:id', component: AttendanceUserComponent },
+  { path: 'log-list', component: AllLogComponent },
+  { path: 'log-user/:id', component: UserLogComponent },
 ];
