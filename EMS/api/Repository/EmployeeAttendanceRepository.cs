@@ -19,11 +19,11 @@ namespace api.Repository
 
             using var sqlCon = _context.SqlConnection();
 
-            var getResult = await sqlCon.QuerySingleOrDefaultAsync<Employee>(
+            var result = await sqlCon.QuerySingleOrDefaultAsync<Employee>(
                 "dbo.GetEmployeeById",
                 new { Id = id }, 
                 commandType: CommandType.StoredProcedure
-            ) ?? throw new Exception($"Employee with ID {id} does not exist.");
+            ) ?? throw new InvalidOperationException("Employee not found.");
             using var pgCon = _context.PgConnection();
 
             var parameters = new DynamicParameters();
@@ -64,22 +64,23 @@ namespace api.Repository
             parametars.Add("p_checkin_time", attendance.CheckInTime);
             parametars.Add("p_checkout_time", attendance.CheckOutTime);
             await pgCon.ExecuteAsync("select public.updateemployeeattendance(@p_attendance_id,@p_checkin_time,@p_checkout_time)",parametars);
-            return;
-            
         }
 
-        public async Task<IEnumerable<EmployeeAttendance>> GetAllUserAttendance(int Id)
+        public async Task<IEnumerable<EmployeeAttendance>> GetAllUserAttendance(int id)
         {
             using var sqlCon = _context.SqlConnection();
-            var getResult = await sqlCon.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { Id }, commandType: CommandType.StoredProcedure);
+            var getResult = await sqlCon.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { id }, commandType: CommandType.StoredProcedure);
             if (getResult != null)
             {
                 using var pgCon = _context.PgConnection();
-                var x = await pgCon.QueryAsync<EmployeeAttendance>("SELECT * FROM getattendancebyemployeeid(@emp_id);",new { emp_id = Id });
+                var x = await pgCon.QueryAsync<EmployeeAttendance>("SELECT * FROM getattendancebyemployeeid(@emp_id);",new { emp_id = id });
                 return x;
 
             }
-            return null;
+            else
+            {
+                return [];
+            }
         }
     }
 }

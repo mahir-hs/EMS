@@ -1,29 +1,24 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text.Json;
-using System.Threading.Tasks;
 using api.Data.Contexts;
 using api.Helpers;
 using api.Models;
 using api.Repository.IRepository;
-using api.Services;
 using api.Services.IServices;
 using Dapper;
-using Microsoft.OpenApi.Models;
+using Microsoft.Data.SqlClient;
 
 namespace api.Repository
 {
-    public class EmployeeRepository(IFactoryDbContext context, IOperationLogService operationLogService) : IEmployeeRepository
+    public class EmployeeRepository(IFactoryDbContext context, IOperationLogService operationLogService,ILogger<EmployeeRepository> logger) : IEmployeeRepository
     {
         private readonly IFactoryDbContext _context = context;
         private readonly IOperationLogService _operationLogService = operationLogService;
+        private readonly ILogger<EmployeeRepository> _logger = logger;
 
-        public async Task<Employee?> AddAsync(Employee entity)
+        public async Task<Response<Employee?>> AddAsync(Employee entity)
         {
             using var con = _context.SqlConnection();
             con.Open();
-            using var transaction = con.BeginTransaction();
 
             try
             {
@@ -41,10 +36,18 @@ namespace api.Repository
                         entity.DepartmentId,
                         entity.DesignationId
                     },
-                    transaction,
                     commandType: CommandType.StoredProcedure);
 
-                if (employee != null)
+                if (employee == null)
+                {
+                    return new Response<Employee?>(
+                        null,
+                        false,
+                        "Failed to add Employee.",
+                        "500"
+                    );
+                }
+                try
                 {
                     var log = new OperationLog
                     {
@@ -55,34 +58,51 @@ namespace api.Repository
                         OperationDetails = OperationLogHelper.CreateInsertDetails(employee)
                     };
 
-
-
                     await _operationLogService.LogOperationAsync(log);
-
-                    transaction.Commit();
+                }
+                catch (Exception logEx)
+                {
+                    _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", employee.Id);
                 }
 
-                return employee;
+                return new Response<Employee?>(
+                employee,
+                true,
+                "Added Successfully",
+                "200");
+           
             }
-            catch
+            catch (SqlException sqlEx)
             {
-                transaction.Rollback();
-                throw;
+                _logger.LogError(sqlEx, "SQL error occurred while adding a employee: {Message}", sqlEx.Message);
+                return new Response<Employee?>(
+                null,
+                false,
+                "A database error occurred while adding the employee.",
+                "500");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while adding a employee in repository: {Message}", ex.Message);
+                return new Response<Employee?>(
+                null,
+                false,
+                "A database error occurred while adding the employee in repository.",
+                "500");
             }
         }
 
-        public async Task<Employee?> UpdateAsync(int id, Employee entity)
+        public async Task<Response<Employee?>> UpdateAsync(int id, Employee entity)
         {
             using var con = _context.SqlConnection();
             con.Open();
-            using var transaction = con.BeginTransaction();
 
             try
             {
                 var oldEntity = await GetByIdAsync(id);
                 if (oldEntity == null) return null;
 
-                var updatedEmployee = await con.QueryFirstOrDefaultAsync<Employee>(
+                var updatedEmployee = await con.QuerySingleOrDefaultAsync<Employee>(
                     "dbo.UpdateEmployee",
                     new
                     {
@@ -96,10 +116,20 @@ namespace api.Repository
                         entity.DepartmentId,
                         entity.DesignationId
                     },
-                    transaction,
                     commandType: CommandType.StoredProcedure);
 
-                if (updatedEmployee != null)
+
+                if (updatedEmployee == null)
+                {
+                    return new Response<Employee?>(
+                        null,
+                        false,
+                        "Failed to update Employee.",
+                        "500"
+                    );
+                }
+
+                try
                 {
                     var log = new OperationLog
                     {
@@ -107,41 +137,68 @@ namespace api.Repository
                         EntityName = "Employee",
                         EntityId = updatedEmployee.Id,
                         TimeStamp = DateTime.UtcNow,
-                        OperationDetails = OperationLogHelper.CreateUpdateDetails(oldEntity, updatedEmployee)
+                        OperationDetails = OperationLogHelper.CreateUpdateDetails(oldEntity.Result, updatedEmployee)
                     };
                     await _operationLogService.LogOperationAsync(log);
-                    transaction.Commit();
+                }
+                catch (Exception logEx)
+                {
+                    _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", id);
                 }
 
-                return updatedEmployee;
+                return new Response<Employee?>(
+                updatedEmployee,
+                true,
+                "Updated Successfully",
+                "200");
             }
-            catch
+            catch (SqlException sqlEx)
             {
-                transaction.Rollback();
-                throw;
+                _logger.LogError(sqlEx, "SQL error occurred while updating a employee: {Message}", sqlEx.Message);
+                return new Response<Employee?>(
+                null,
+                false,
+                "A database error occurred while updating the employee.",
+                "500");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while updating a employee in repository: {Message}", ex.Message);
+                return new Response<Employee?>(
+                null,
+                false,
+                "A database error occurred while updating the employee in repository.",
+                "500");
             }
         }
 
-        public async Task<Employee?> DeleteAsync(int id)
+        public async Task<Response<Employee?>> DeleteAsync(int id)
         {
             using var con = _context.SqlConnection();
             con.Open();
-            using var transaction = con.BeginTransaction();
 
             try
             {
                 var entityToDelete = await GetByIdAsync(id);
                 if (entityToDelete == null) return null;
 
-                var deletedEmployee = await con.QueryFirstOrDefaultAsync<Employee>(
+                var deletedEmployee = await con.QuerySingleOrDefaultAsync<Employee>(
                     "dbo.DeleteEmployee",
                     new { id },
-                    transaction,
                     commandType: CommandType.StoredProcedure);
 
-                if (deletedEmployee != null)
+                if (deletedEmployee == null)
                 {
+                    return new Response<Employee?>(
+                        null,
+                        false,
+                        "Failed to add Employee.",
+                        "500"
+                    );
 
+                }
+                try
+                {
                     var log = new OperationLog
                     {
                         OperationType = "Delete",
@@ -151,29 +208,100 @@ namespace api.Repository
                         OperationDetails = OperationLogHelper.CreateDeleteDetails(deletedEmployee)
                     };
                     await _operationLogService.LogOperationAsync(log);
-                    
-                    transaction.Commit();
+                }
+                catch(Exception logEx)
+                {
+                    _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", id);
                 }
 
-                return deletedEmployee;
+                return new Response<Employee?>(
+                    deletedEmployee,
+                    true,
+                    "Deleted Successfully",
+                    "200");
             }
-            catch
+            catch (SqlException sqlEx)
             {
-                transaction.Rollback();
-                throw;
+                _logger.LogError(sqlEx, "SQL error occurred while deleting a employee: {Message}", sqlEx.Message);
+                return new Response<Employee?>(
+                null,
+                false,
+                "A database error occurred while deleting the employee.",
+                "500");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while deleting a employee in repository: {Message}", ex.Message);
+                return new Response<Employee?>(
+                null,
+                false,
+                "A database error occurred while deleting the employee in repository.",
+                "500");
             }
         }
 
-        public async Task<IEnumerable<Employee?>> GetAllAsync()
+        public async Task<Response<IEnumerable<Employee?>>> GetAllAsync()
         {
             using var con = _context.SqlConnection();
-            return await con.QueryAsync<Employee>("dbo.GetAllEmployees", commandType: CommandType.StoredProcedure);
+            con.Open();
+            try
+            {
+                var result = await con.QueryAsync<Employee>("dbo.GetAllEmployees", commandType: CommandType.StoredProcedure);
+                return new Response<IEnumerable<Employee?>>(result, true, "Fetched all Employees successfully!", "200");
+            }
+            catch (SqlException sqlEx)
+            {
+                _logger.LogError(sqlEx, "SQL error occurred while fetching Employee in repository: {Message}", sqlEx.Message);
+                return new Response<IEnumerable<Employee?>>(
+                    null,
+                    false,
+                    "A database error occurred while fetching Employee in repository.",
+                    "500"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while fetching Employee in repository: {Message}", ex.Message);
+                return new Response<IEnumerable<Employee?>>(
+                    null,
+                    false,
+                    "An unexpected error occurred while fetching Employee in repository.",
+                    "500"
+                );
+            }
         }
 
-        public async Task<Employee?> GetByIdAsync(int Id)
+        public async Task<Response<Employee?>> GetByIdAsync(int id)
         {
             using var con = _context.SqlConnection();
-            return await con.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { Id }, commandType: CommandType.StoredProcedure);
+            con.Open();
+            try
+            {
+                var result = await con.QuerySingleOrDefaultAsync<Employee>("dbo.GetEmployeeById", new { id }, commandType: CommandType.StoredProcedure);
+                return new Response<Employee?>(
+                    result, true, "Fetched the employee successfully","200");
+            }
+            catch (SqlException sqlEx)
+            {
+                _logger.LogError(sqlEx, "SQL error occurred while fetching employee in repository: {Message}", sqlEx.Message);
+                return new Response<Employee?>(
+                    null,
+                    false,
+                    "A database error occurred while fetching Employee in repository.",
+                    "500"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error occurred while fetching Employee in repository: {Message}", ex.Message);
+                return new Response<Employee?>(
+                    null,
+                    false,
+                    "An unexpected error occurred while fetching Employee in repository.",
+                    "500"
+                );
+            }
+
         }
     }
 }

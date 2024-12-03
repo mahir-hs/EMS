@@ -11,7 +11,7 @@ namespace api.Repository.IRepository
         Task UpdateAttendanceAsync(int id, EmployeeAttendance attendance);
 
         Task<IEnumerable<EmployeeAttendance>> GetAllAttendanceAsync();
-        Task<IEnumerable<EmployeeAttendance>> GetAllUserAttendance(int employeeId);
+        Task<IEnumerable<EmployeeAttendance>> GetAllUserAttendance(int id);
 
 
     }

@@ -1,3 +1,4 @@
+using api.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ namespace api.Repository.IRepository
 {
     public interface IRepository<T> where T:class
     {
-        Task<IEnumerable<T?>> GetAllAsync();
-        Task<T?> GetByIdAsync(int id);
-        Task<T?> AddAsync(T entity);
-        Task<T?> DeleteAsync(int id);
+        Task<Response<IEnumerable<T?>>> GetAllAsync();
+        Task<Response<T?>> GetByIdAsync(int id);
+        Task<Response<T?>> AddAsync(T entity);
+        Task<Response<T?>> DeleteAsync(int id);
     }
 }

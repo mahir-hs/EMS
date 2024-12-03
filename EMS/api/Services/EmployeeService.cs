@@ -11,51 +11,233 @@ using api.Services.IServices;
 
 namespace api.Services
 {
-    public class EmployeeService(IEmployeeRepository context) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository context,ILogger<IEmployeeService> logger) : IEmployeeService
     {
         private readonly IEmployeeRepository _context = context;
+        private readonly ILogger<IEmployeeService> _logger = logger;
         
-        public async Task<EmployeeDto> AddAsync(EmployeeCreateDto entity)
+        public async Task<Response<EmployeeDto>> AddAsync(EmployeeCreateDto entity)
         {
-            var fetch = await _context.AddAsync(entity.ToEmployee());
-            var toDto = fetch.ToEmployeeDto();
-            return toDto;
-
-        }
-
-        public async Task<EmployeeDto> DeleteAsync(int id)
-        {
-            
-            var fetch = await _context.DeleteAsync(id);
-            var toDto = fetch!.ToEmployeeDto();
-            return toDto;
-        }
-
-        public async Task<IEnumerable<EmployeeDto?>> GetAllAsync()
-        {
-            var data = await _context.GetAllAsync();
-            if(data==null)
+            var validationErrors = EmployeeCreateDtoValidator.Validate(entity);
+            if (validationErrors.Count != 0)
             {
-                return []; 
+                return new Response<EmployeeDto>(
+                    null,
+                    false,
+                    $"Validation errors: {string.Join("; ", validationErrors)}",
+                    "400"
+                );
             }
-            var toDto = data.Select(x =>x.ToEmployeeDto());
-            return toDto;
-        }
-
-        public async Task<EmployeeDto?> GetByIdAsync(int id)
-        {
-            var data = await _context.GetByIdAsync(id);
-            var toDto = data?.ToEmployeeDto();
-            return toDto;
-        }
-
-        public async Task<EmployeeDto> UpdateAsync(int id, EmployeeUpdateDto entity)
-        {
             
-            var fetch = await _context.GetByIdAsync(id);
-            var data = entity.ToEmployee(fetch!);
-            fetch = await _context.UpdateAsync(id,data);
-            return fetch!.ToEmployeeDto();
+            try
+            {
+                var response = await _context.AddAsync(entity.ToEmployee());
+                if (!response.Success)
+                {
+                    return new Response<EmployeeDto>(
+                        null,
+                        false,
+                        response.Message,
+                        response.Type
+                    );
+                }
+                return new Response<EmployeeDto>(
+                    response.Result!.ToEmployeeDto(),
+                    true,
+                    response.Message,
+                    response.Type
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding an employee");
+                return new Response<EmployeeDto>(
+                    null,
+                    false,
+                    ex.Message,
+                    "500"
+                );
+            }
+
+        }
+
+        public async Task<Response<EmployeeDto>> DeleteAsync(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return new Response<EmployeeDto>(
+                        null,
+                        false,
+                        "Invalid employee ID format from service layer.",
+                        "400"
+                    );
+                }
+                var repositoryResponse = await _context.DeleteAsync(id);
+                if (!repositoryResponse.Success)
+                {
+                    return new Response<EmployeeDto>(
+                        null,
+                        false,
+                        repositoryResponse.Message,
+                        repositoryResponse.Type
+                    );
+                }
+                return new Response<EmployeeDto>(
+                    repositoryResponse.Result!.ToEmployeeDto(),
+                    true,
+                    repositoryResponse.Message,
+                    repositoryResponse.Type
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting an employee");
+                return new Response<EmployeeDto>(
+                    null,
+                    false,
+                    ex.Message,
+                    "500"
+                );
+            }
+
+        }
+
+        public async Task<Response<IEnumerable<EmployeeDto?>>> GetAllAsync()
+        {
+            try
+            {
+                var response = await _context.GetAllAsync();
+                if (!response.Success)
+                {
+                    return new Response<IEnumerable<EmployeeDto?>>(
+                        null,
+                        false,
+                        response.Message,
+                        response.Type
+                    );
+                }
+
+                return new Response<IEnumerable<EmployeeDto?>>(
+                    response.Result.Select(x => x.ToEmployeeDto()),
+                    true,
+                    response.Message,
+                    response.Type
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving employees in service layer.");
+                return new Response<IEnumerable<EmployeeDto?>>(
+                    null,
+                    false,
+                    ex.Message,
+                    "500"
+                );
+            }
+        }
+
+        public async Task<Response<EmployeeDto?>> GetByIdAsync(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return new Response<EmployeeDto?>(
+                        null,
+                        false,
+                        "Invalid employee ID format from service layer.",
+                        "400"
+                    );
+                }
+
+                var response = await _context.GetByIdAsync(id);
+                if (!response.Success)
+                {
+                    return new Response<EmployeeDto?>(
+                        null,
+                        false,
+                        response.Message,
+                        response.Type
+                    );
+                }
+                return new Response<EmployeeDto?>(
+                    response.Result!.ToEmployeeDto(),
+                    true,
+                    response.Message,
+                    response.Type
+                );
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving an employee in service layer.");
+                return new Response<EmployeeDto?>(
+                    null,
+                    false,
+                    ex.Message,
+                    "500"
+                );
+            }
+            
+        }
+
+        public async Task<Response<EmployeeDto>> UpdateAsync(int id, EmployeeUpdateDto entity)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return new Response<EmployeeDto>(
+                        null,
+                        false,
+                        "Invalid employee ID format from service layer.",
+                        "400"
+                    );
+                }
+
+                var validationErrors = EmployeeUpdateDtoValidator.Validate(entity);
+                if (validationErrors.Count != 0)
+                {
+                    return new Response<EmployeeDto>(
+                        null,
+                        false,
+                        $"Validation errors: {string.Join("; ", validationErrors)}",
+                        "400"
+                    );
+                }
+
+                var fetch = await _context.GetByIdAsync(id);
+
+                var repositoryResponse = await _context.UpdateAsync(id, entity.ToEmployee(fetch.Result!));
+                if (!repositoryResponse.Success)
+                {
+                    return new Response<EmployeeDto>(
+                        null,
+                        false,
+                        repositoryResponse.Message,
+                        repositoryResponse.Type
+                    );
+                }
+                return new Response<EmployeeDto>(
+                    repositoryResponse.Result!.ToEmployeeDto(),
+                    true,
+                    repositoryResponse.Message,
+                    repositoryResponse.Type
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating an employee in service layer.");
+                return new Response<EmployeeDto>(
+                    null,
+                    false,
+                    ex.Message,
+                    "500"
+                );
+            }
+
         }
     }
 }
