@@ -1,3 +1,4 @@
+using api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ namespace api.Services.IServices
 {
     public interface IService<T> where T:class
     {
-        Task<IEnumerable<T?>> GetAllAsync();
-        Task<T?> GetByIdAsync(int id);
-        Task<T> DeleteAsync(int id);
+        Task<ApiResponse> GetAllAsync();
+        Task<ApiResponse> GetByIdAsync(int id);
+        Task<ApiResponse> DeleteAsync(int id);
     }
 }
 

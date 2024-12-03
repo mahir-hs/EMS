@@ -2,56 +2,128 @@
 using api.Dto.Employees;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace api.Controllers
 {
     [Route("api/designation")]
     [ApiController]
-    public class DesignationController(IDesignationService context):ControllerBase
+    public class DesignationController(IDesignationService context, ILogger<DesignationController> logger) :ControllerBase
     {
         private readonly IDesignationService _context = context;
+        private readonly ILogger<DesignationController> _logger = logger;
 
-        [HttpGet]
-        [Route("all")]
+
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _context.GetAllAsync());
+            try
+            {
+                var result = await _context.GetAllAsync();
+
+                if (!result.Success)
+                {
+                    _logger.LogWarning("No Designation found.");
+                    return NotFound(result);
+                }
+
+                return Ok(result.Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred in Designation Controller");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
         }
 
-        [HttpGet]
-        [Route("get")]
+        [HttpGet("get")]
         public async Task<IActionResult> Get([FromQuery] int id)
         {
-            return Ok(await _context.GetByIdAsync(id));
+            try
+            {
+                var result = await _context.GetByIdAsync(id);
+
+                if (!result.Success)
+                {
+                    _logger.LogWarning("No Designation found.");
+                    return NotFound(new { message = "No Designation found." });
+                }
+
+                return Ok(result.Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred in Designation Controller Get()");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
         }
 
-        [HttpPost]
-        [Route("add")]
+        [HttpPost("add")]
         public async Task<IActionResult> Add([FromBody] DesignationCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return Ok(await _context.AddAsync(dto));
+            try
+            {
+                var result = await _context.AddAsync(dto);
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Failed to add new Designation");
+                    return BadRequest(result);
+                }
+                return StatusCode(201, new { message = "Designation added successfully.", data = result.Result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding the Designation.");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
         }
 
-        [HttpPatch]
-        [Route("update")]
+        [HttpPatch("update")]
         public async Task<IActionResult> Update([FromQuery] int id,[FromBody] DesignationUpdateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return Ok(await _context.UpdateAsync(id,dto));
+            try
+            {
+                var result = await _context.UpdateAsync(id, dto);
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Failed to update the Department");
+                    return StatusCode(500, result);
+                } 
+                return Ok(new { message = "Designation updated successfully.", data = result.Result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the designation.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+
         }
 
-        [HttpDelete]
-        [Route("delete")]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete([FromQuery] int Id)
         {
-            return Ok(await _context.DeleteAsync(Id));
+            try
+            {
+                var result = await _context.DeleteAsync(Id);
+                if (!result.Success)
+                {
+                    return StatusCode(500, result);
+                }
+                return Ok(new { message = "Designation deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the Designation.");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
         }
     }
 }

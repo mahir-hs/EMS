@@ -7,5 +7,6 @@ namespace api.Services.IServices
         Task LogOperationAsync(OperationLog log);
         Task<IEnumerable<OperationLog>> GetAllLogsAsync();
         Task<List<OperationLog>> GetLogsForEmployeeAsync(int employeeId);
+        Task<List<OperationLog>> GetLogsForAttendanceAsync(int employeeId);
     }
 }

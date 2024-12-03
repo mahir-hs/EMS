@@ -1,6 +1,8 @@
 using System.Net.NetworkInformation;
+using api.Controllers;
 using api.Data;
 using api.Data.Contexts;
+using api.Dto.Employees;
 using api.Repository;
 using api.Repository.IRepository;
 using api.Services;
@@ -11,9 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IFactoryDbContext, FactoryDbContext>();
 
-//builder.Services.AddSingleton<IDapperContext,SqlServerDapperContext>();
-//builder.Services.AddSingleton<IMongoContext,MongoDbContext>();
-//builder.Services.AddSingleton<IPgContext, PgServerDapperContext>();
 
 builder.Services.AddScoped<IEmployeeService,EmployeeService>();
 builder.Services.AddScoped<IDesignationService,DesignationService>();
@@ -26,6 +25,7 @@ builder.Services.AddScoped<IDesignationRepository,DesignationRepository>();
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
 builder.Services.AddScoped<IOperationLogRepository,OperationLogRepository>();
 builder.Services.AddScoped<IEmployeeAttendanceRepository,EmployeeAttendanceRepository>();
+
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -63,6 +63,6 @@ app.UseRouting();
 app.UseCors("AllowAngularApp"); // Apply CORS policy
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
 

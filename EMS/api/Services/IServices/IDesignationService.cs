@@ -1,11 +1,12 @@
 ﻿using api.Dto.Designation;
 using api.Dto.Employees;
+using api.Models;
 
 namespace api.Services.IServices
 {
     public interface IDesignationService:IService<DesignationDto>
     {
-        Task<DesignationDto> AddAsync(DesignationCreateDto entity);
-        Task<DesignationDto> UpdateAsync(int id,DesignationUpdateDto entity);
+        Task<ApiResponse> AddAsync(DesignationCreateDto entity);
+        Task<ApiResponse> UpdateAsync(int id,DesignationUpdateDto entity);
     }
 }

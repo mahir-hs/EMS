@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using api.Dto.EmployeeAttendance;
+using api.Models;
 
 namespace api.Services.IServices
 {
     public interface IEmployeeAttendanceService
     {
-        Task AddAttendanceAsync(int id,EmployeeAttendanceCreateDto attendanceDto);
+        Task<ApiResponse> AddAttendanceAsync(int id,EmployeeAttendanceCreateDto attendanceDto);
 
-        Task UpdateAttendanceAsync(int attendanceId, EmployeeAttendanceUpdateDto attendanceDto);
+        Task<ApiResponse> UpdateAttendanceAsync(int attendanceId, EmployeeAttendanceUpdateDto attendanceDto);
 
-        Task<EmployeeAttendanceDto> GetAttendanceByAttendanceId(int id);
+        Task<ApiResponse> GetAttendanceByAttendanceId(int id);
 
 
-        Task<IEnumerable<EmployeeAttendanceDto>> GetAllAttendanceAsync();
+        Task<ApiResponse> GetAllAttendanceAsync();
 
-        Task<IEnumerable<EmployeeAttendanceDto>> GetAllUserAttendance(int id);
+        Task<ApiResponse> GetAllUserAttendance(int id);
     }
 }

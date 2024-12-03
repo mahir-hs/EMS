@@ -5,13 +5,13 @@ namespace api.Repository.IRepository
 {
     public interface IEmployeeAttendanceRepository
     {
-        Task AddAttendanceAsync(int id,EmployeeAttendance attendance);
+        Task<ApiResponse> AddAttendanceAsync(int id,EmployeeAttendance attendance);
 
-        Task<EmployeeAttendance?> GetAttendanceByAttendanceIdAsync(int attendanceId);
-        Task UpdateAttendanceAsync(int id, EmployeeAttendance attendance);
+        Task<ApiResponse> GetAttendanceByAttendanceIdAsync(int attendanceId);
+        Task<ApiResponse> UpdateAttendanceAsync(int id, EmployeeAttendance attendance);
 
-        Task<IEnumerable<EmployeeAttendance>> GetAllAttendanceAsync();
-        Task<IEnumerable<EmployeeAttendance>> GetAllUserAttendance(int employeeId);
+        Task<ApiResponse> GetAllAttendanceAsync();
+        Task<ApiResponse> GetAllUserAttendance(int id);
 
 
     }
