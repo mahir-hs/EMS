@@ -1,6 +1,4 @@
 ﻿using api.Dto.Department;
-using api.Dto.Designation;
-using api.Models;
 using api.Models;
 
 namespace api.Services.IServices

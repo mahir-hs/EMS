@@ -1,8 +1,5 @@
-﻿using api.Dto.Department;
-using api.Dto.Department;
-using api.Dto.Designation;
+﻿using api.Dto.Designation;
 using api.Mappers;
-using api.Models;
 using api.Models;
 using api.Repository.IRepository;
 using api.Services.IServices;
@@ -10,7 +7,6 @@ using Azure;
 
 namespace api.Services
 {
-    public class DesignationService(IDesignationRepository context, ILogger<DesignationService> logger) : IDesignationService
     public class DesignationService(IDesignationRepository context, ILogger<DesignationService> logger) : IDesignationService
     {
         private readonly IDesignationRepository _context = context;

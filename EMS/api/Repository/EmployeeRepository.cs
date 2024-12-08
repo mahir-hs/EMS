@@ -6,16 +6,13 @@ using api.Repository.IRepository;
 using api.Services.IServices;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Data.SqlClient;
 
 namespace api.Repository
 {
     public class EmployeeRepository(IFactoryDbContext context, IOperationLogService operationLogService,ILogger<EmployeeRepository> logger) : IEmployeeRepository
-    public class EmployeeRepository(IFactoryDbContext context, IOperationLogService operationLogService,ILogger<EmployeeRepository> logger) : IEmployeeRepository
     {
         private readonly IFactoryDbContext _context = context;
         private readonly IOperationLogService _operationLogService = operationLogService;
-        private readonly ILogger<EmployeeRepository> _logger = logger;
         private readonly ILogger<EmployeeRepository> _logger = logger;
 
         public async Task<ApiResponse> AddAsync(Employee entity)
@@ -67,10 +64,6 @@ namespace api.Repository
                 {
                     _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", employee.Id);
                 }
-                catch (Exception logEx)
-                {
-                    _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", employee.Id);
-                }
 
                 return new ApiResponse(
                 employee,
@@ -79,7 +72,6 @@ namespace api.Repository
                 "200");
            
             }
-            catch (SqlException sqlEx)
             catch (SqlException sqlEx)
             {
                 _logger.LogError(sqlEx, "SQL error occurred while adding a employee: {Message}", sqlEx.Message);
@@ -130,7 +122,7 @@ namespace api.Repository
                 parameters.Add("ErrorMessage", dbType: DbType.String, size: 255, direction: ParameterDirection.Output);
                 parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
-                var updatedEmployee = await con.QuerySingleOrDefaultAsync<Employee>(
+
                 var updatedEmployee = await con.QuerySingleOrDefaultAsync<Employee>(
                     "dbo.UpdateEmployee",
                   parameters,
@@ -158,13 +150,8 @@ namespace api.Repository
                         EntityId = updatedEmployee!.Id,
                         TimeStamp = DateTime.UtcNow,
                         OperationDetails = OperationLogHelper.CreateUpdateDetails(oldEntity.Result, updatedEmployee)
-                        OperationDetails = OperationLogHelper.CreateUpdateDetails(oldEntity.Result, updatedEmployee)
                     };
                     await _operationLogService.LogOperationAsync(log);
-                }
-                catch (Exception logEx)
-                {
-                    _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", id);
                 }
                 catch (Exception logEx)
                 {
@@ -177,7 +164,6 @@ namespace api.Repository
                 "Updated Successfully",
                 "200");
             }
-            catch (SqlException sqlEx)
             catch (SqlException sqlEx)
             {
                 _logger.LogError(sqlEx, "SQL error occurred while updating a employee: {Message}", sqlEx.Message);
@@ -239,10 +225,6 @@ namespace api.Repository
                         OperationDetails = $"Deleted employee with id {id}"
                     };
                     await _operationLogService.LogOperationAsync(log);
-                }
-                catch(Exception logEx)
-                {
-                    _logger.LogError(logEx, "Logging failed for operation on employee {EmployeeId}", id);
                 }
                 catch(Exception logEx)
                 {

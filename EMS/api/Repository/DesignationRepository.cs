@@ -1,6 +1,4 @@
 ﻿using System.Data;
-using System.Transactions;
-using System.Transactions;
 using api.Data.Contexts;
 using api.Helpers;
 using api.Models;
@@ -8,18 +6,14 @@ using api.Repository.IRepository;
 using api.Services.IServices;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
+
 
 namespace api.Repository
 {
     public class DesignationRepository(IFactoryDbContext context, IOperationLogService operationLogService, ILogger<DesignationRepository> logger) : IDesignationRepository
-    public class DesignationRepository(IFactoryDbContext context, IOperationLogService operationLogService, ILogger<DesignationRepository> logger) : IDesignationRepository
     {
         private readonly IFactoryDbContext _context = context;
         private readonly IOperationLogService _operationLogService = operationLogService;
-        private readonly ILogger<DesignationRepository> _logger = logger;
         private readonly ILogger<DesignationRepository> _logger = logger;
 
         public async Task<ApiResponse> AddAsync(Designation entity)

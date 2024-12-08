@@ -1,5 +1,6 @@
 ﻿using api.Dto.EmployeeAttendance;
 using api.Dto.Employees;
+using api.Models;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,14 +10,10 @@ namespace api.Controllers
 {
     [Route("api/employee-attendance")]
     [Controller]
-    public class EmployeeAttendanceController(IEmployeeAttendanceService context, ILogger<EmployeeAttendanceController> logger) :ControllerBase
+
     public class EmployeeAttendanceController(IEmployeeAttendanceService context, ILogger<EmployeeAttendanceController> logger) :ControllerBase
     {
         private readonly IEmployeeAttendanceService _context = context;
-        private readonly ILogger<EmployeeAttendanceController> _logger = logger;
-        
-
-        [HttpGet("all")]
         private readonly ILogger<EmployeeAttendanceController> _logger = logger;
         
 
@@ -72,7 +69,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Failed to add new Employee Attendance");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to add new Employee Attendance", "400"));
             }
             try
             {
@@ -97,7 +95,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Failed to update Employee Attendance");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to update Employee Attendance", "400"));
             }
             try
             {

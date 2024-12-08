@@ -7,7 +7,10 @@
         public string Message { get; set; }
         public string Type { get; set; }
 
-        public ApiResponse(dynamic? result = default, bool success = true, string message = "Success", string type = "General")
+        public ApiResponse(dynamic? result = default,
+                           bool success = true,
+                           string message = "Success",
+                           string type = "General")
         {
             Result = result;
             Success = success;

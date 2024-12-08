@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Dto.Employees;
-using api.Models;
 using api.Models;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +8,10 @@ namespace api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController(IEmployeeService context, ILogger<EmployeeController> logger) : ControllerBase
-    public class EmployeeController(IEmployeeService context, ILogger<EmployeeController> logger) : ControllerBase
     {
         private readonly IEmployeeService _context = context;
         private readonly ILogger<EmployeeController> _logger = logger;
-        private readonly ILogger<EmployeeController> _logger = logger;
 
-        [HttpGet("all")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
@@ -65,31 +57,12 @@ namespace api.Controllers
         }
 
         [HttpPost("add")]
-            try
-            {
-                var employee = await _context.GetByIdAsync(id);
-
-                if (!employee.Success)
-                {
-                    _logger.LogWarning("No employee found.");
-                    return NotFound(employee);
-                }
-
-                return Ok(employee.Result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An unexpected error occurred in Employee Controller Get()");
-                return StatusCode(500, new { message = "An error occurred while processing your request." });
-            }
-        }
-
-        [HttpPost("add")]
         public async Task<IActionResult> Add([FromBody] EmployeeCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Failed to add new Employee");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to add new Employee", "400"));
             }
             try
             {
@@ -114,7 +87,8 @@ namespace api.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Failed to update Employee");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to update Employee", "400"));
             }
             try
             {

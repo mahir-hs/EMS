@@ -63,7 +63,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Failed to add new Department");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to add new Department", "400"));
             }
             try
             {
@@ -87,7 +88,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _logger.LogWarning("Failed to update the Department");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to update the Department", "400"));
             }
             try
             {
