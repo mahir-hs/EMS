@@ -1,3 +1,4 @@
+<h1>Employee Management</h1>
 <div *ngIf="loading" class="loading-container">
   <p>Loading...</p>
 </div>
@@ -7,8 +8,13 @@
 </div>
 
 <div *ngIf="!loading && employees.length > 0" class="employee-list">
-  <h1>Employee Management</h1>
-  <a [routerLink]="'/employee-add'" class="add-employee-btn">Add Employee</a>
+  <div class="action-buttons">
+    <a [routerLink]="'/employee-add'" class="add-employee-btn">Add Employee</a>
+    <button (click)="exportToCSV()" class="download-btn">Download CSV</button>
+    <button (click)="exportToExcel()" class="download-btn">
+      Download Excel
+    </button>
+  </div>
 
   <table class="employee-table">
     <thead>
@@ -19,13 +25,13 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Address</th>
-        <th>Date of Birth</th>
-        <th>Department</th>
-        <th>Designation</th>
+        <th>DOB</th>
+        <th>Dept</th>
+        <th>Desig</th>
         <th>Attendance</th>
         <th>Logs</th>
-        <th>Update</th>
-        <th>Delete</th>
+        <th>AT-Logs</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -54,13 +60,19 @@
         </td>
         <td>
           <button
+            [routerLink]="['/log-attendance', employee.id]"
+            class="logs-btn"
+          >
+            <i class="fas fa-file-alt"></i> AT-Logs
+          </button>
+        </td>
+        <td>
+          <button
             [routerLink]="['/employee-update', employee.id]"
             class="update-btn"
           >
             <i class="fas fa-edit"></i> Edit
           </button>
-        </td>
-        <td>
           <button (click)="deleteEmployee(employee.id)" class="delete-btn">
             <i class="fas fa-trash"></i> Delete
           </button>

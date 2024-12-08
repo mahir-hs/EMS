@@ -45,7 +45,7 @@ export class DepartmentUpdateComponent implements OnInit {
     this.deprtmentService.getById(this.departmentId).subscribe({
       next: (data) => {
         this.departmentForm.patchValue({
-          dpet: data.dept,
+          dept: data.dept,
         });
       },
       error: (error) => {

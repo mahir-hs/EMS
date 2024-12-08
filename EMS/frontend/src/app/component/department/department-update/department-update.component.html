@@ -1,24 +1,37 @@
 <div class="department-update-container">
-<h1 class="form-title">Update Department</h1>
+  <h1 class="form-title">Update Department</h1>
 
-  <form [formGroup]="departmentForm" (ngSubmit)="updateDepartment()" class="update-form">
+  <form
+    [formGroup]="departmentForm"
+    (ngSubmit)="updateDepartment()"
+    class="update-form"
+  >
     <div class="form-group">
-      <label for="dept">Department Name</label>
       <input
         type="text"
         id="dept"
         formControlName="dept"
-        name="dept"
-        placeholder="Enter department name"
         required
+        placeholder="Enter department name"
       />
-      <div *ngIf="departmentForm.get('dept')?.invalid && departmentForm.get('dept')?.touched">
+      <div
+        *ngIf="
+          departmentForm.get('dept')?.invalid &&
+          departmentForm.get('dept')?.touched
+        "
+      >
         <small class="error-text">Department is required.</small>
       </div>
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="save-btn" [disabled]="departmentForm.invalid">Save Changes</button>
+      <button
+        type="submit"
+        class="save-btn"
+        [disabled]="departmentForm.invalid"
+      >
+        Save Changes
+      </button>
     </div>
   </form>
 </div>

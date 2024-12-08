@@ -3,6 +3,8 @@ import { AttendanceService } from './../../../service/attendance.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import { ngxCsv } from 'ngx-csv';
 
 @Component({
   selector: 'app-attendance-user',
@@ -36,6 +38,49 @@ export class AttendanceUserComponent implements OnInit {
   }
 
   addAttendance(): void {
-    this.router.navigate([`/attendance-add/${this.employeeId}`]);
+    const newAttendance = {
+      checkInTime: new Date().toISOString().split('.')[0],
+      checkOutTime: null,
+      employeeId: this.employeeId,
+    };
+
+    this.attendanceService
+      .addAttendance(this.employeeId, newAttendance)
+      .subscribe({
+        next: (response) => {
+          console.log('Attendance added successfully:', response);
+          this.getAttendanceDetails();
+        },
+        error: (err) => {
+          console.error('Error adding attendance:', err);
+        },
+      });
+  }
+
+  exportToCSV(): void {
+    const csvData = this.attendance.map((att) => ({
+      ID: att.id,
+      CheckInTime: att.checkInTime,
+      CheckOutTime: att.checkOutTime,
+    }));
+
+    const options = {
+      headers: ['ID', 'CheckInTime', 'CheckOutTime'],
+    };
+    new ngxCsv(csvData, 'EmployeeAttendance', options);
+  }
+
+  exportToExcel(): void {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+      this.attendance.map((att) => ({
+        ID: att.id,
+        CheckInTime: att.checkInTime,
+        CheckOutTime: att.checkOutTime,
+      }))
+    );
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'EmployeeAttendance');
+
+    XLSX.writeFile(wb, 'employee-attendance.xlsx');
   }
 }

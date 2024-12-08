@@ -16,4 +16,8 @@ export class LogsService {
   getEmployee(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/get-employee?id=${id}`);
   }
+
+  getAttendance(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/get-attendance?id=${id}`);
+  }
 }

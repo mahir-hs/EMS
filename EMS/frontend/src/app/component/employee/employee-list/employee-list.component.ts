@@ -5,6 +5,8 @@ import { RouterLink } from '@angular/router';
 import { DepartmentService } from '../../../service/department.service';
 import { DesignationService } from '../../../service/designation.service';
 import { AttendanceService } from '../../../service/attendance.service';
+import * as XLSX from 'xlsx';
+import { ngxCsv } from 'ngx-csv';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
@@ -43,6 +45,7 @@ export class EmployeeListComponent implements OnInit {
         this.loading = false;
         this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
         this.setPaginatedEmployees();
+        console.log(this.employees);
       },
       error: (err) => {
         console.error('Failed to fetch employees:', err);
@@ -118,11 +121,67 @@ export class EmployeeListComponent implements OnInit {
           this.employees = this.employees.filter(
             (employee) => employee.id !== id
           );
+
+          this.totalPages = Math.ceil(
+            this.employees.length / this.itemsPerPage
+          );
+
+          if (this.currentPage > this.totalPages) {
+            this.currentPage = this.totalPages || 1;
+          }
+
+          this.setPaginatedEmployees();
         },
         error: (error) => {
           console.error('Error deleting employee:', error);
         },
       });
     }
+  }
+
+  exportToCSV(): void {
+    const csvData = this.employees.map((emp) => ({
+      ID: emp.id,
+      Name: `${emp.firstName} ${emp.lastName}`,
+      Email: emp.email,
+      Department: this.getDepartmentName(emp.departmentId),
+      Designation: this.getDesignationName(emp.designationId),
+      Phone: emp.phone,
+      Address: emp.address,
+      DateOfBirth: emp.dateOfBirth,
+    }));
+
+    const options = {
+      headers: [
+        'ID',
+        'Name',
+        'Email',
+        'Department',
+        'Designation',
+        'Phone',
+        'Address',
+        'DateOfBirth',
+      ],
+    };
+    new ngxCsv(csvData, 'EmployeeList', options);
+  }
+
+  exportToExcel(): void {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+      this.employees.map((emp) => ({
+        ID: emp.id,
+        Name: `${emp.firstName} ${emp.lastName}`,
+        Email: emp.email,
+        Department: this.getDepartmentName(emp.departmentId),
+        Designation: this.getDesignationName(emp.designationId),
+        Phone: emp.phone,
+        Address: emp.address,
+        DateOfBirth: emp.dateOfBirth,
+      }))
+    );
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Employees');
+
+    XLSX.writeFile(wb, 'employees.xlsx');
   }
 }

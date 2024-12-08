@@ -14,8 +14,6 @@ export class EmployeeService {
     return this.http.get<any[]>(`${this.apiUrl}/all`);
   }
 
-
-
   add(employee: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/add`, employee);
   }
@@ -29,10 +27,9 @@ export class EmployeeService {
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/delete?Id=${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/delete?id=${id}`);
   }
 }
-
 
 export interface Employee {
   id: number;

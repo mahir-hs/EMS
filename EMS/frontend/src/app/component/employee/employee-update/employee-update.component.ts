@@ -96,6 +96,7 @@ export class EmployeeUpdateComponent implements OnInit {
   getEmployeeDetails(): void {
     this.employeeService.getById(this.employeeId).subscribe({
       next: (data) => {
+        console.log(data);
         this.employeeForm.patchValue({
           firstName: data.firstName,
           lastName: data.lastName,

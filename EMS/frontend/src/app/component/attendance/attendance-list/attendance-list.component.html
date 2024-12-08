@@ -10,7 +10,6 @@
       (input)="filterAttendance()"
       class="search-box"
     />
-    <button [routerLink]="'/attendance-add'" class="add-btn">Add Attendance</button>
   </div>
 
   <!-- Loading Indicator -->
@@ -38,10 +37,19 @@
       <tr *ngFor="let record of filteredAttendance">
         <td>{{ record.id }}</td>
         <td>{{ record.employeeId }}</td>
-        <td>{{ record.checkInTime | date: 'short' }}</td>
-        <td>{{ record.checkOutTime ? (record.checkOutTime | date: 'short') : 'N/A' }}</td>
+        <td>{{ record.checkInTime | date : "short" }}</td>
         <td>
-          <button [routerLink]="['/attendance-update', record.id]" class="update-btn">Update</button>
+          {{
+            record.checkOutTime ? (record.checkOutTime | date : "short") : "N/A"
+          }}
+        </td>
+        <td>
+          <button
+            [routerLink]="['/attendance-update', record.id]"
+            class="update-btn"
+          >
+            Update
+          </button>
         </td>
       </tr>
     </tbody>

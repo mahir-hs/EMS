@@ -1,46 +1,46 @@
 /* General Styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 15px;
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
   color: #333;
+  text-align: center;
 }
 
 /* Loading State */
 .loading-container {
+  text-align: center;
+  color: #007bff;
+  font-size: 1rem;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #fff;
-  color: #007bff;
-  font-size: 1.2rem;
 }
 
 /* Empty State */
 .empty-state {
   text-align: center;
+  color: #666;
 }
 
 .empty-state p {
-  font-size: 1.2rem;
-  color: #555;
+  margin: 10px 0;
 }
 
 .empty-state a {
-  font-size: 1rem;
   color: #007bff;
   text-decoration: none;
 }
@@ -49,165 +49,139 @@ h1 {
   text-decoration: underline;
 }
 
-/* Add Employee Button */
-.add-employee-btn {
-  background-color: #007bff; /* Blue color */
-  color: white;
-  padding: 10px 20px;
+/* Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.action-buttons a,
+.action-buttons button {
+  background: linear-gradient(135deg, #4caf50, #81c784);
+  color: #fff;
+  padding: 10px 15px;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-block;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
   text-align: center;
-  text-decoration: none; /* Remove underline from link */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition for hover effect */
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.add-employee-btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-  transform: scale(1.05); /* Slight scale effect */
+.action-buttons a:hover,
+.action-buttons button:hover {
+  background: linear-gradient(135deg, #388e3c, #66bb6a);
+  transform: scale(1.05);
 }
 
-.add-employee-btn:focus {
-  outline: none; /* Remove focus outline */
+.action-buttons .download-btn {
+  background: linear-gradient(135deg, #1e88e5, #64b5f6);
 }
 
-
-/* Employee List */
-.employee-list {
-  padding-top: 20px;
+.action-buttons .download-btn:hover {
+  background: linear-gradient(135deg, #1565c0, #42a5f5);
 }
 
+/* Table */
 .employee-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin-top: 10px;
   background-color: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
 .employee-table th,
 .employee-table td {
-  padding: 10px;
-  text-align: left;
+  padding: 8px 10px;
+  text-align: center;
   border: 1px solid #ddd;
 }
 
-.employee-table th {
-  background-color: #f2f2f2;
+
+.employee-table tr:hover {
+  background-color: #f9f9f9;
 }
 
 .employee-table td button {
-  color: white;
+  padding: 5px 8px;
+  font-size: 0.8rem;
   border: none;
-  padding: 6px 12px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9rem;
-  margin: 0 5px;
-  display: flex;
-  align-items: center;
-}
-
-.employee-table td button i {
+  color: #fff;
   margin-right: 5px;
+  text-align: center;
+  transition: background-color 0.2s ease;
 }
 
-/* Button Colors and Icons */
-.attendance-btn {
+.employee-table td .attendance-btn {
   background-color: #17a2b8;
 }
 
-.attendance-btn:hover {
-  background-color: #138496;
-}
-
-.update-btn {
+.employee-table td .update-btn {
   background-color: #ffc107;
 }
 
-.update-btn:hover {
-  background-color: #e0a800;
-}
-
-.delete-btn {
+.employee-table td .delete-btn {
   background-color: #dc3545;
 }
 
-.delete-btn:hover {
-  background-color: #c82333;
-}
-
-.logs-btn {
+.employee-table td .logs-btn {
   background-color: #28a745;
 }
 
-.logs-btn:hover {
-  background-color: #218838;
-}
-
-/* Add Employee Button */
-.cta-btn {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-block;
-  margin-bottom: 20px;
-  text-decoration: none;
-  text-align: center;
-}
-
-.cta-btn:hover {
-  background-color: #218838;
+.employee-table td button:hover {
+  opacity: 0.9;
 }
 
 /* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-top: 15px;
   gap: 10px;
-  margin-top: 20px;
 }
 
 .pagination button {
+  padding: 6px 12px;
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 8px 15px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .pagination button:hover {
   background-color: #0056b3;
 }
 
-.pagination span {
-  font-size: 1rem;
-  color: #333;
+.pagination button[disabled] {
+  background-color: #ddd;
+  cursor: not-allowed;
 }
 
-.pagination button[disabled] {
-  background-color: #ccc;
-  cursor: not-allowed;
+.pagination span {
+  font-size: 0.9rem;
+  color: #333;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .employee-table th, .employee-table td {
-    padding: 8px;
+  .employee-table th,
+  .employee-table td {
+    padding: 6px;
   }
 
-  .pagination {
+  .action-buttons {
     flex-direction: column;
-  }
-
-  .cta-btn {
-    margin-bottom: 15px;
+    gap: 8px;
   }
 }

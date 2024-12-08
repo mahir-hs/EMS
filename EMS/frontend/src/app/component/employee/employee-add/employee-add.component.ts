@@ -19,17 +19,6 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./employee-add.component.css'],
 })
 export class EmployeeAddComponent implements OnInit {
-  // employee = {
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   phone: '',
-  //   address: '',
-  //   dateOfBirth: '',
-  //   departmentId: null,
-  //   designationId: null,
-  // };
-
   designation: any[] = [];
   department: any[] = [];
   employeeForm!: FormGroup;
@@ -88,6 +77,7 @@ export class EmployeeAddComponent implements OnInit {
   }
 
   addEmployee(): void {
+    console.log(this.employeeForm.value);
     this.employeeService.add(this.employeeForm.value).subscribe({
       next: () => {
         this.router.navigate(['']);

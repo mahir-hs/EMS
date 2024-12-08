@@ -1,6 +1,8 @@
 <div class="attendance-container">
   <h1 class="title">Employee Attendance</h1>
   <div class="actions">
+    <button (click)="exportToCSV()">Download CSV</button>
+    <button (click)="exportToExcel()">Download Excel</button>
     <button (click)="addAttendance()" class="btn btn-primary">
       Add Attendance
     </button>

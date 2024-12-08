@@ -1,7 +1,9 @@
 <div class="department-container">
   <div class="header">
     <h1>Department List</h1>
-    <button class="add-btn" [routerLink]="'/department-add'">Add Department</button>
+    <button class="add-btn" [routerLink]="'/department-add'">
+      Add Department
+    </button>
   </div>
 
   <!-- Loading Indicator -->
@@ -28,8 +30,15 @@
         <td>{{ dept.id }}</td>
         <td>{{ dept.dept }}</td>
         <td class="action-buttons">
-          <button class="edit-btn" [routerLink]="['/department-update', dept.id]">Edit</button>
-          <button class="delete-btn" (click)="deleteDepartment(dept.id)">Delete</button>
+          <button
+            class="edit-btn"
+            [routerLink]="['/department-update', dept.id]"
+          >
+            Edit
+          </button>
+          <button class="delete-btn" (click)="deleteDepartment(dept.id)">
+            Delete
+          </button>
         </td>
       </tr>
     </tbody>
