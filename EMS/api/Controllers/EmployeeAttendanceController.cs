@@ -3,14 +3,20 @@ using api.Dto.Employees;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace api.Controllers
 {
     [Route("api/employee-attendance")]
     [Controller]
     public class EmployeeAttendanceController(IEmployeeAttendanceService context, ILogger<EmployeeAttendanceController> logger) :ControllerBase
+    public class EmployeeAttendanceController(IEmployeeAttendanceService context, ILogger<EmployeeAttendanceController> logger) :ControllerBase
     {
         private readonly IEmployeeAttendanceService _context = context;
+        private readonly ILogger<EmployeeAttendanceController> _logger = logger;
+        
+
+        [HttpGet("all")]
         private readonly ILogger<EmployeeAttendanceController> _logger = logger;
         
 

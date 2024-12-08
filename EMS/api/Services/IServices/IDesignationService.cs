@@ -1,6 +1,7 @@
 ﻿using api.Dto.Designation;
 using api.Dto.Employees;
 using api.Models;
+using api.Models;
 
 namespace api.Services.IServices
 {

@@ -7,13 +7,16 @@ using api.Services.IServices;
 using Azure;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace api.Repository
 {
     public class DepartmentRepository(IFactoryDbContext context, IOperationLogService operationLogService,ILogger<DepartmentRepository> logger) : IDepartmentRepository
+    public class DepartmentRepository(IFactoryDbContext context, IOperationLogService operationLogService,ILogger<DepartmentRepository> logger) : IDepartmentRepository
     {
         private readonly IFactoryDbContext _context = context;
         private readonly IOperationLogService _operationLogService = operationLogService;
+        private readonly ILogger<DepartmentRepository> _logger = logger;
         private readonly ILogger<DepartmentRepository> _logger = logger;
 
         public async Task<ApiResponse> AddAsync(Department entity)
@@ -172,6 +175,7 @@ namespace api.Repository
                 );
             }
         }
+
 
 
         public async Task<ApiResponse> GetAllAsync()

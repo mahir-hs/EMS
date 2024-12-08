@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Dto.Employees;
 using api.Models;
+using api.Models;
 using api.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +13,13 @@ namespace api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController(IEmployeeService context, ILogger<EmployeeController> logger) : ControllerBase
+    public class EmployeeController(IEmployeeService context, ILogger<EmployeeController> logger) : ControllerBase
     {
         private readonly IEmployeeService _context = context;
         private readonly ILogger<EmployeeController> _logger = logger;
+        private readonly ILogger<EmployeeController> _logger = logger;
 
+        [HttpGet("all")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
@@ -41,6 +45,26 @@ namespace api.Controllers
         [HttpGet("get")]
         public async Task<IActionResult> Get([FromQuery] int id)
         {
+            try
+            {
+                var employee = await _context.GetByIdAsync(id);
+
+                if (!employee.Success)
+                {
+                    _logger.LogWarning("No employee found.");
+                    return NotFound(employee);
+                }
+
+                return Ok(employee.Result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred in Employee Controller Get()");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
+        }
+
+        [HttpPost("add")]
             try
             {
                 var employee = await _context.GetByIdAsync(id);

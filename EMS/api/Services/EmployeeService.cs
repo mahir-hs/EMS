@@ -12,8 +12,10 @@ using api.Services.IServices;
 namespace api.Services
 {
     public class EmployeeService(IEmployeeRepository context,ILogger<IEmployeeService> logger) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository context,ILogger<IEmployeeService> logger) : IEmployeeService
     {
         private readonly IEmployeeRepository _context = context;
+        private readonly ILogger<IEmployeeService> _logger = logger;
         private readonly ILogger<IEmployeeService> _logger = logger;
         
         public async Task<ApiResponse> AddAsync(EmployeeCreateDto entity)
