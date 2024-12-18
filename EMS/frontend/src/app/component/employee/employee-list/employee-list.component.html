@@ -19,10 +19,47 @@
   <table class="employee-table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
+        <th
+          (click)="sortEmployees('id')"
+          [ngClass]="{
+            sorted: sortKey === 'id',
+            ascending: sortKey === 'id' && sortDirection,
+            descending: sortKey === 'id' && !sortDirection
+          }"
+        >
+          ID
+        </th>
+        <th
+          (click)="sortEmployees('firstName')"
+          [ngClass]="{
+            sorted: sortKey === 'firstName',
+            ascending: sortKey === 'firstName' && sortDirection,
+            descending: sortKey === 'firstName' && !sortDirection
+          }"
+        >
+          First Name
+        </th>
+        <th
+          (click)="sortEmployees('lastName')"
+          [ngClass]="{
+            sorted: sortKey === 'lastName',
+            ascending: sortKey === 'lastName' && sortDirection,
+            descending: sortKey === 'lastName' && !sortDirection
+          }"
+        >
+          Last Name
+        </th>
+        <th
+          (click)="sortEmployees('email')"
+          [ngClass]="{
+            sorted: sortKey === 'email',
+            ascending: sortKey === 'email' && sortDirection,
+            descending: sortKey === 'email' && !sortDirection
+          }"
+        >
+          Email
+        </th>
+
         <th>Phone</th>
         <th>Address</th>
         <th>DOB</th>
@@ -34,6 +71,7 @@
         <th>Action</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let employee of paginatedEmployees">
         <td>{{ employee.id }}</td>

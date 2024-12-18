@@ -6,8 +6,9 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class LogsService {
-  private apiUrl = 'http://localhost:5092/api/log';
+export class DownloadService {
+  private apiUrl = 'http://localhost:5092/api/Download';
+
   constructor(private http: HttpClient, private authService: AuthService) {}
   private createAuthorizationHeader(): HttpHeaders {
     const token = this.authService.getToken();
@@ -17,22 +18,19 @@ export class LogsService {
     }
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
-  getAll(): Observable<any[]> {
+  employeeExportCsv(): Observable<any> {
     const headers = this.createAuthorizationHeader();
-    return this.http.get<any[]>(`${this.apiUrl}/all`, { headers });
-  }
-
-  getEmployee(id: number): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<any>(`${this.apiUrl}/get-employee?id=${id}`, {
+    return this.http.get(`${this.apiUrl}/export-to-csv`, {
       headers,
+      responseType: 'blob',
     });
   }
 
-  getAttendance(id: number): Observable<any> {
+  employeeExportExcel(): Observable<any> {
     const headers = this.createAuthorizationHeader();
-    return this.http.get<any>(`${this.apiUrl}/get-attendance?id=${id}`, {
+    return this.http.get(`${this.apiUrl}/export-to-excel`, {
       headers,
+      responseType: 'blob',
     });
   }
 }

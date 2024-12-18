@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,26 +9,40 @@ import { Observable } from 'rxjs';
 export class EmployeeService {
   private apiUrl = 'http://localhost:5092/api/employee';
 
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient, private authService: AuthService) {}
+  private createAuthorizationHeader(): HttpHeaders {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.error('No token found');
+      return new HttpHeaders();
+    }
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
   getAll(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/all`);
+    const headers = this.createAuthorizationHeader();
+    return this.http.get<any[]>(`${this.apiUrl}/all`, { headers });
   }
 
   add(employee: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add`, employee);
+    const headers = this.createAuthorizationHeader();
+    return this.http.post<any>(`${this.apiUrl}/add`, employee, { headers });
   }
 
   getById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/get?id=${id}`);
+    const headers = this.createAuthorizationHeader();
+    return this.http.get<any>(`${this.apiUrl}/get?id=${id}`, { headers });
   }
 
   update(id: number, employee: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/update?id=${id}`, employee);
+    const headers = this.createAuthorizationHeader();
+    return this.http.patch<any>(`${this.apiUrl}/update?id=${id}`, employee, {
+      headers,
+    });
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/delete?id=${id}`);
+    const headers = this.createAuthorizationHeader();
+    return this.http.delete<any>(`${this.apiUrl}/delete?id=${id}`, { headers });
   }
 }
 

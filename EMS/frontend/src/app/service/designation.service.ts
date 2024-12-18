@@ -1,39 +1,52 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DesignationService {
-
   private apiUrl = 'http://localhost:5092/api/designation';
 
-  constructor(private http:HttpClient) { }
-
-  getAll(): Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/all`);
+  constructor(private http: HttpClient, private authService: AuthService) {}
+  private createAuthorizationHeader(): HttpHeaders {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.error('No token found');
+      return new HttpHeaders();
+    }
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+  getAll(): Observable<any[]> {
+    const headers = this.createAuthorizationHeader();
+    return this.http.get<any[]>(`${this.apiUrl}/all`, { headers });
   }
 
   add(department: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/add`, department);
+    const headers = this.createAuthorizationHeader();
+    return this.http.post<any>(`${this.apiUrl}/add`, department, { headers });
   }
 
   getById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/get?id=${id}`);
+    const headers = this.createAuthorizationHeader();
+    return this.http.get<any>(`${this.apiUrl}/get?id=${id}`, { headers });
   }
 
   update(id: number, department: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/update?id=${id}`, department);
+    const headers = this.createAuthorizationHeader();
+    return this.http.patch<any>(`${this.apiUrl}/update?id=${id}`, department, {
+      headers,
+    });
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/delete?Id=${id}`);
+    const headers = this.createAuthorizationHeader();
+    return this.http.delete<any>(`${this.apiUrl}/delete?Id=${id}`, { headers });
   }
 }
 
-
-export interface Designation{
+export interface Designation {
   id: number;
-  role:string;
+  role: string;
 }

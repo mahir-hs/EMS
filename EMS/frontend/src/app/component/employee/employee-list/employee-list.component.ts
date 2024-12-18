@@ -1,3 +1,4 @@
+import { DownloadService } from './../../../service/download.service';
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService, Employee } from '../../../service/employee.service';
 import { CommonModule } from '@angular/common';
@@ -21,7 +22,6 @@ export class EmployeeListComponent implements OnInit {
   paginatedEmployees: Employee[] = [];
 
   loading: boolean = true;
-
   itemsPerPage: number = 10;
   currentPage: number = 1;
   totalPages: number = 1;
@@ -29,7 +29,7 @@ export class EmployeeListComponent implements OnInit {
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
     private designationService: DesignationService,
-    private attendanceService: AttendanceService
+    private downloadService: DownloadService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +52,24 @@ export class EmployeeListComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  sortKey: string = '';
+  sortDirection: boolean = true;
+
+  sortEmployees(key: string): void {
+    if (this.sortKey === key) {
+      this.sortDirection = !this.sortDirection;
+    } else {
+      this.sortKey = key;
+      this.sortDirection = true;
+    }
+    this.employees.sort((a: any, b: any) => {
+      if (a[key] < b[key]) return this.sortDirection ? -1 : 1;
+      if (a[key] > b[key]) return this.sortDirection ? 1 : -1;
+      return 0;
+    });
+    this.setPaginatedEmployees();
   }
   setPaginatedEmployees(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -140,48 +158,38 @@ export class EmployeeListComponent implements OnInit {
   }
 
   exportToCSV(): void {
-    const csvData = this.employees.map((emp) => ({
-      ID: emp.id,
-      Name: `${emp.firstName} ${emp.lastName}`,
-      Email: emp.email,
-      Department: this.getDepartmentName(emp.departmentId),
-      Designation: this.getDesignationName(emp.designationId),
-      Phone: emp.phone,
-      Address: emp.address,
-      DateOfBirth: emp.dateOfBirth,
-    }));
-
-    const options = {
-      headers: [
-        'ID',
-        'Name',
-        'Email',
-        'Department',
-        'Designation',
-        'Phone',
-        'Address',
-        'DateOfBirth',
-      ],
-    };
-    new ngxCsv(csvData, 'EmployeeList', options);
+    this.downloadService.employeeExportCsv().subscribe({
+      next: (response) => {
+        const blob = new Blob([response], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'EmployeeList.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Failed to download CSV:', err);
+      },
+    });
   }
 
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
-      this.employees.map((emp) => ({
-        ID: emp.id,
-        Name: `${emp.firstName} ${emp.lastName}`,
-        Email: emp.email,
-        Department: this.getDepartmentName(emp.departmentId),
-        Designation: this.getDesignationName(emp.designationId),
-        Phone: emp.phone,
-        Address: emp.address,
-        DateOfBirth: emp.dateOfBirth,
-      }))
-    );
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Employees');
-
-    XLSX.writeFile(wb, 'employees.xlsx');
+    this.downloadService.employeeExportExcel().subscribe({
+      next: (response) => {
+        const blob = new Blob([response], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'EmployeeList.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Failed to download Excel:', err);
+      },
+    });
   }
 }
