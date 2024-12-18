@@ -2,6 +2,7 @@
 using api.Dto.Employees;
 using api.Models;
 using api.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ namespace api.Controllers
 {
     [Route("api/designation")]
     [ApiController]
+    [Authorize]
     public class DesignationController(IDesignationService context, ILogger<DesignationController> logger) :ControllerBase
     {
         private readonly IDesignationService _context = context;

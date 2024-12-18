@@ -1,4 +1,5 @@
 ﻿using api.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -6,7 +7,7 @@ namespace api.Controllers
 {
     [Route("api/log")]
     [ApiController]
-
+    [Authorize]
     public class OperationLogController(IOperationLogService context, ILogger<OperationLogController> logger) : ControllerBase
     {
         private readonly IOperationLogService _context = context;

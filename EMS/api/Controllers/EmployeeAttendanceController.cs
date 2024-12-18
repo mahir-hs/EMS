@@ -2,6 +2,7 @@
 using api.Dto.Employees;
 using api.Models;
 using api.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,7 @@ namespace api.Controllers
 {
     [Route("api/employee-attendance")]
     [Controller]
-
+    [Authorize]
     public class EmployeeAttendanceController(IEmployeeAttendanceService context, ILogger<EmployeeAttendanceController> logger) :ControllerBase
     {
         private readonly IEmployeeAttendanceService _context = context;

@@ -2,6 +2,7 @@
 using api.Dto.Designation;
 using api.Models;
 using api.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -9,6 +10,7 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DepartmentController(IDepartmentService context,ILogger<DepartmentController> logger) : ControllerBase
     {
         private readonly IDepartmentService _context = context;

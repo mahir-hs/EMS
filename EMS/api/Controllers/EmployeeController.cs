@@ -1,12 +1,14 @@
 using api.Dto.Employees;
 using api.Models;
 using api.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeeController(IEmployeeService context, ILogger<EmployeeController> logger) : ControllerBase
     {
         private readonly IEmployeeService _context = context;
