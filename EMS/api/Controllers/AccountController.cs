@@ -82,8 +82,7 @@ namespace api.Controllers
             }
         }
 
-
-        [Authorize]
+        
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
         {
