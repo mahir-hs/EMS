@@ -1,7 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  tap,
+  throwError,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -49,5 +56,39 @@ export class AuthService {
     if (this.isLoggedIn()) {
       this.router.navigate(['/']);
     }
+  }
+
+  decodeToken(token: string): any {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  }
+
+  getEmailFromToken(token: string): string | null {
+    const decoded = this.decodeToken(token);
+    return decoded?.email || null;
+  }
+
+  refreshToken(): Observable<any> {
+    const rT = localStorage.getItem('refreshToken');
+    const aT = this.getToken();
+    return this.http
+      .post<{ accessToken: string; refreshToken: string }>(
+        `${this.apiUrl}/refresh`,
+        {
+          accessToken: aT,
+          refreshToken: rT,
+        }
+      )
+      .pipe(
+        tap((response) => {
+          console.log('Refreshed token:', response.accessToken);
+          this.setToken(response.accessToken);
+        }),
+        catchError((error) => {
+          this.logout();
+          return throwError(() => new Error('Session expired'));
+        }),
+        map((response) => response.accessToken)
+      );
   }
 }

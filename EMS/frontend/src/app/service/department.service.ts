@@ -9,42 +9,26 @@ import { AuthService } from './auth.service';
 export class DepartmentService {
   private apiUrl = 'http://localhost:5092/api/department';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
-
-  private createAuthorizationHeader(): HttpHeaders {
-    const token = this.authService.getToken();
-    if (!token) {
-      console.error('No token found');
-      return new HttpHeaders();
-    }
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  }
+  constructor(private http: HttpClient) {}
 
   getAll(): Observable<any[]> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<any[]>(`${this.apiUrl}/all`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/all`);
   }
 
   add(department: any): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.post<any>(`${this.apiUrl}/add`, department, { headers });
+    return this.http.post<any>(`${this.apiUrl}/add`, department);
   }
 
   getById(id: number): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<any>(`${this.apiUrl}/get?id=${id}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/get?id=${id}`);
   }
 
   update(id: number, department: any): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.patch<any>(`${this.apiUrl}/update?id=${id}`, department, {
-      headers,
-    });
+    return this.http.patch<any>(`${this.apiUrl}/update?id=${id}`, department);
   }
 
   delete(id: number): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.delete<any>(`${this.apiUrl}/delete?Id=${id}`, { headers });
+    return this.http.delete<any>(`${this.apiUrl}/delete?Id=${id}`);
   }
 }
 

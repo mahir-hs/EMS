@@ -8,31 +8,16 @@ import { AuthService } from './auth.service';
 })
 export class LogsService {
   private apiUrl = 'http://localhost:5092/api/log';
-  constructor(private http: HttpClient, private authService: AuthService) {}
-  private createAuthorizationHeader(): HttpHeaders {
-    const token = this.authService.getToken();
-    if (!token) {
-      console.error('No token found');
-      return new HttpHeaders();
-    }
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  }
+  constructor(private http: HttpClient) {}
   getAll(): Observable<any[]> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<any[]>(`${this.apiUrl}/all`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/all`);
   }
 
   getEmployee(id: number): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<any>(`${this.apiUrl}/get-employee?id=${id}`, {
-      headers,
-    });
+    return this.http.get<any>(`${this.apiUrl}/get-employee?id=${id}`);
   }
 
   getAttendance(id: number): Observable<any> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.get<any>(`${this.apiUrl}/get-attendance?id=${id}`, {
-      headers,
-    });
+    return this.http.get<any>(`${this.apiUrl}/get-attendance?id=${id}`);
   }
 }
