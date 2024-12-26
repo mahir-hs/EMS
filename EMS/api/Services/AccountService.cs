@@ -32,7 +32,7 @@ namespace api.Services
 
                 user!.Token = CreateJwt(user.Email);
                 var newAccessToken = user.Token;
-                var newRefreshToken =await CreateRefreshToken();
+                var newRefreshToken = await CreateRefreshToken();
                 user.RefreshToken = newRefreshToken;
                 user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5);
                 Console.WriteLine($"User: {user} {user.Email} {user.Password} {user.RoleId} {user.Token} {user.RefreshToken} {user.RefreshTokenExpiryTime}");
@@ -40,11 +40,12 @@ namespace api.Services
 
                 return new ApiResponse(new TokenApiDto { AccessToken = newAccessToken, RefreshToken = newRefreshToken }, true, "Login successful.");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "Error while logging in.");
                 return new ApiResponse(new { error = ex.ToString() });
             }
-           
+
         }
 
         public async Task<ApiResponse> LogOut(string accessToken)
@@ -60,9 +61,10 @@ namespace api.Services
                     return result;
                 }
 
-                return new ApiResponse(null,true, "Logout successful.");
+                return new ApiResponse(null, true, "Logout successful.");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "Error while logging out.");
                 return new ApiResponse(new { error = ex.ToString() });
             }
@@ -97,7 +99,8 @@ namespace api.Services
 
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "Error while registering user.");
                 return new ApiResponse(new { error = ex.ToString() });
             }
@@ -110,7 +113,8 @@ namespace api.Services
                 var principal = GetPrincipleFromExpiredToken(tokenApiDto.AccessToken);
                 var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
                 var response = await _context.GetUserData(emailClaim!.Value);
-                if (!response.Success) {
+                if (!response.Success)
+                {
                     return response;
                 }
                 var user = response.Result as Account;
@@ -125,7 +129,8 @@ namespace api.Services
                 var data = new TokenApiDto { AccessToken = user.Token, RefreshToken = user.RefreshToken };
                 return new ApiResponse(data, true, "Token refreshed successfully.");
             }
-            catch (Exception ex) {  
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "Error while refreshing token.");
                 return new ApiResponse(new { error = ex.ToString() });
             }
@@ -154,7 +159,7 @@ namespace api.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<string>  CreateRefreshToken()
+        public async Task<string> CreateRefreshToken()
         {
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var refreshToken = Convert.ToBase64String(tokenBytes);

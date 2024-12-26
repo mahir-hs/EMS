@@ -31,11 +31,36 @@ export class AuthService {
   }
 
   logout() {
+    const accessToken = this.getToken();
+    if (!accessToken) {
+      console.warn('No access token found for logout');
+      this.clearSession();
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.http
+      .post(`${this.apiUrl}/logout`, JSON.stringify(accessToken), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .subscribe({
+        next: () => {
+          this.clearSession();
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error('Logout failed:', err);
+          this.clearSession();
+          this.router.navigate(['/login']);
+        },
+      });
+  }
+
+  clearSession() {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     this.isAuthenticated.next(false);
   }
-
   setToken(token: string) {
     localStorage.setItem('token', token);
     this.isAuthenticated.next(true);

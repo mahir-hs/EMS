@@ -25,7 +25,7 @@ namespace api.Repository
                 parameters.Add("@Email", entity.Email);
                 parameters.Add("@Password", entity.Password);
                 parameters.Add("@RoleId", entity.RoleId);
-                parameters.Add("@Token",entity.Token);
+                parameters.Add("@Token", entity.Token);
                 parameters.Add("@RoleName", entity.RoleName);
                 parameters.Add("@RefreshToken", entity.RefreshToken);
                 parameters.Add("@RefreshTokenExpiryTime", entity.RefreshTokenExpiryTime);
@@ -77,7 +77,8 @@ namespace api.Repository
                     "500"
                 );
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "An error occurred while adding account: {Message}", ex.Message);
                 return new ApiResponse(
                null,
@@ -106,7 +107,7 @@ namespace api.Repository
                     "200"
                 );
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting account: {Message}", ex.Message);
                 return new ApiResponse(
@@ -130,7 +131,7 @@ namespace api.Repository
                     "200"
                 );
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while fetching accounts: {Message}", ex.Message);
                 return new ApiResponse(
@@ -187,7 +188,7 @@ namespace api.Repository
         //        _logger.LogError(ex, "An error occurred while fetching user: {Message}", ex.Message);
         //        return new ApiResponse(null, false, "An error occurred while fetching user.", "500");
         //    }
-            
+
         //}
 
         public async Task<ApiResponse> GetUserData(string email)
@@ -197,7 +198,7 @@ namespace api.Repository
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@Email", email);
-                
+
 
                 var fetch = await con.QuerySingleOrDefaultAsync<Account>("dbo.GetUserByEmail", parameters, commandType: CommandType.StoredProcedure);
                 return new ApiResponse(
@@ -226,7 +227,7 @@ namespace api.Repository
                 parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
                 await con.ExecuteScalarAsync("dbo.Logout", parameters, commandType: CommandType.StoredProcedure);
-                
+
                 var errorMessage = parameters.Get<string>("@ErrorMessage");
                 var result = parameters.Get<int>("ReturnValue");
                 if (result == -1)
@@ -238,7 +239,7 @@ namespace api.Repository
                         "500"
                     );
                 }
-                return new ApiResponse( 
+                return new ApiResponse(
                     null,
                     true,
                     "Logged out successfully.",
@@ -318,7 +319,7 @@ namespace api.Repository
                 _logger.LogError(ex, "An error occurred while updating account: {Message}", ex.Message);
                 return new ApiResponse(null, false, "An error occurred while updating account.", "500");
             }
-            
+
         }
     }
 }

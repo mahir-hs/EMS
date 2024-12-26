@@ -30,7 +30,7 @@ namespace api.Controllers
                 return BadRequest(new ApiResponse(ModelState, false, "Failed to Login", "400"));
             }
 
-           try
+            try
             {
                 var result = await _context.Login(user);
                 if (!result.Success)
@@ -47,12 +47,13 @@ namespace api.Controllers
 
                 return Ok(token);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "An error occurred while processing your request.");
-                return StatusCode(500, new { message = "An error occurred while processing your request. "+ ex.Message });
+                return StatusCode(500, new { message = "An error occurred while processing your request. " + ex.Message });
             }
 
-           
+
         }
 
         [HttpPost("SignUp")]
@@ -63,7 +64,7 @@ namespace api.Controllers
                 _logger.LogWarning("Failed to Register");
                 return BadRequest(new ApiResponse(ModelState, false, "Failed to Register", "400"));
             }
-            
+
             try
             {
                 var userObj = await _context.Register(user);
@@ -75,18 +76,19 @@ namespace api.Controllers
 
                 return Ok(userObj);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while processing your request.");
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
 
-        
+
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
         {
-            if(!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _logger.LogWarning("Failed to refresh token");
                 return BadRequest(new ApiResponse(ModelState, false, "Failed to refresh token", "400"));
             }
@@ -94,7 +96,8 @@ namespace api.Controllers
             try
             {
                 var response = await _context.RefreshToken(tokenApiDto);
-                if (!response.Success) {
+                if (!response.Success)
+                {
                     _logger.LogWarning("Failed to refresh token");
                     return BadRequest(response);
                 }
@@ -105,18 +108,19 @@ namespace api.Controllers
                     RefreshToken = response.Result.RefreshToken
                 });
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, "An error occurred while processing your request.");
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
 
-        [Authorize]
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout([FromQuery] string accessToken)
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] string accessToken)
         {
             try
             {
+                Console.WriteLine(accessToken);
                 var response = await _context.LogOut(accessToken);
                 if (!response.Success)
                 {

@@ -17,23 +17,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IFactoryDbContext, FactoryDbContext>();
 
 
-builder.Services.AddScoped<IEmployeeService,EmployeeService>();
-builder.Services.AddScoped<IDesignationService,DesignationService>();
-builder.Services.AddScoped<IDepartmentService,DepartmentService>();
-builder.Services.AddScoped<IOperationLogService,OperationLogService>();
-builder.Services.AddScoped<IEmployeeAttendanceService,EmployeeAttendanceService>();
-builder.Services.AddScoped<IAccountService,AccountService>();
-builder.Services.AddScoped<IDownloadService,DownloadService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IDesignationService, DesignationService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IOperationLogService, OperationLogService>();
+builder.Services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IDownloadService, DownloadService>();
 
-builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();
-builder.Services.AddScoped<IDesignationRepository,DesignationRepository>();
-builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
-builder.Services.AddScoped<IOperationLogRepository,OperationLogRepository>();
-builder.Services.AddScoped<IEmployeeAttendanceRepository,EmployeeAttendanceRepository>();
-builder.Services.AddScoped<IAccountRepository,AccountRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
+builder.Services.AddScoped<IEmployeeAttendanceRepository, EmployeeAttendanceRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 //JWT Authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -109,7 +110,7 @@ if (app.Environment.IsDevelopment())
 
 
 
-app.UseCors("AllowAngularApp"); 
+app.UseCors("AllowAngularApp");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
