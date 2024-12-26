@@ -69,11 +69,11 @@ namespace api.Services
 
        
 
-        public async Task<ApiResponse> GetAllUserAttendance(int id)
+        public async Task<ApiResponse> GetUserAttendance(int id)
         {
             try
             {
-                var employeeAttendances = await _context.GetAllUserAttendance(id);
+                var employeeAttendances = await _context.GetUserAttendance(id);
                 var result = employeeAttendances.Result as IEnumerable<EmployeeAttendance>;
                 var resutlDto = result?.Select(x => x.ToEmployeeAttendanceDto());
                 return new ApiResponse(resutlDto, true, "User attendances retrieved successfully.");

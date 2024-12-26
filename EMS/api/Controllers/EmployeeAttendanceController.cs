@@ -46,7 +46,7 @@ namespace api.Controllers
         {
             try
             {
-                var result = await _context.GetAllUserAttendance(id);
+                var result = await _context.GetUserAttendance(id);
 
                 if (!result.Success)
                 {

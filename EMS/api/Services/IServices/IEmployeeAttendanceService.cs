@@ -15,6 +15,6 @@ namespace api.Services.IServices
 
         Task<ApiResponse> GetAllAttendanceAsync();
 
-        Task<ApiResponse> GetAllUserAttendance(int id);
+        Task<ApiResponse> GetUserAttendance(int id);
     }
 }

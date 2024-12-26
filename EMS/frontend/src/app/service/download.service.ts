@@ -21,4 +21,16 @@ export class DownloadService {
       responseType: 'blob',
     });
   }
+
+  employeeAttendanceExportCsv(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/attendance-export-to-csv?id=${id}`, {
+      responseType: 'blob',
+    });
+  }
+
+  employeeAttendanceExportExcel(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/attendance-export-to-excel?id=${id}`, {
+      responseType: 'blob',
+    });
+  }
 }

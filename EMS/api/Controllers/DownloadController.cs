@@ -27,8 +27,7 @@ namespace api.Controllers
                     return StatusCode(500, apiResponse.Message); 
                 }
 
-                var fileContent = apiResponse.Result as byte[];
-                if(fileContent == null)
+                if (apiResponse.Result is not byte[] fileContent)
                 {
                     return BadRequest(
                         new
@@ -58,9 +57,7 @@ namespace api.Controllers
                 {
                     return StatusCode(500, apiResponse.Message);
                 }
-
-                // Return the Excel file as a downloadable file
-                var fileContent = apiResponse.Result as byte[];
+                byte[]? fileContent = apiResponse.Result as byte[];
                 return new FileContentResult(fileContent!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 {
                     FileDownloadName = "EmployeeList.xlsx"
@@ -69,6 +66,62 @@ namespace api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error exporting employee data to Excel.");
+                return StatusCode(500, "An error occurred while exporting data.");
+            }
+        }
+
+
+        [HttpGet("attendance-export-to-csv")]
+        [Produces("text/csv")]
+        public async Task<IActionResult> AttendanceExportToCSV([FromQuery] int id)
+        {
+            try
+            {
+                var apiResponse = await _context.GetEmployeeAttendanceCSVFile(id);
+                if (!apiResponse.Success)
+                {
+                    return StatusCode(500, apiResponse.Message);
+                }
+
+                if (apiResponse.Result is not byte[] fileContent)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            message = "Failed to export employee attendance data to CSV."
+                        });
+                }
+                return new FileContentResult(fileContent, "text/csv")
+                {
+                    FileDownloadName = "EmployeeAttendanceList.csv"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting employee attendance data to CSV.");
+                return StatusCode(500, "An error occurred while exporting data.");
+            }
+        }
+
+        [HttpGet("attendance-export-to-excel")]
+        public async Task<IActionResult> AttendanceExportToExcel([FromQuery] int id)
+        {
+            try
+            {
+                var apiResponse = await _context.GetEmployeeAttendanceExcelFile(id);
+                if (!apiResponse.Success)
+                {
+                    return StatusCode(500, apiResponse.Message);
+                }
+                byte[]? fileContent = apiResponse.Result as byte[];
+                return new FileContentResult(fileContent!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    FileDownloadName = "EmployeeAttendanceList.xlsx"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting employee attendance data to Excel.");
                 return StatusCode(500, "An error occurred while exporting data.");
             }
         }

@@ -148,7 +148,7 @@ namespace api.Repository
             
         }
 
-        public async Task<ApiResponse> GetAllUserAttendance(int id)
+        public async Task<ApiResponse> GetUserAttendance(int id)
         {
             try
             {

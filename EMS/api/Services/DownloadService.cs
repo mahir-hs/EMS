@@ -4,6 +4,7 @@ using api.Repository.IRepository;
 using api.Services.IServices;
 using ClosedXML.Excel;
 using CsvHelper;
+using DocumentFormat.OpenXml.Bibliography;
 using System.Globalization;
 using System.IO;
 
@@ -24,6 +25,86 @@ namespace api.Services
         private readonly IEmployeeAttendanceRepository _employeeAttendanceRepository = employeeAttendance;
         private readonly ILogger<DownloadService> _logger = logger;
         
+
+        public async Task<ApiResponse> GetEmployeeAttendanceCSVFile(int id)
+        {
+            try
+            {
+                var response = await _employeeAttendanceRepository.GetUserAttendance(id);
+                if (!response.Success)
+                {
+                    return new ApiResponse(null, false, response.Message, response.Type);
+                }
+
+                var employeeAttendances = response.Result as IEnumerable<EmployeeAttendance>;
+                using var memoryStream = new MemoryStream();
+                using var writer = new StreamWriter(memoryStream);
+                using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+                csv.WriteField("ID");
+                csv.WriteField("In Time");
+                csv.WriteField("Out Time");
+                await csv.NextRecordAsync();
+
+                foreach (var employeeAttendance in employeeAttendances)
+                {
+                    csv.WriteField(employeeAttendance.Id);
+                    csv.WriteField(employeeAttendance.CheckInTime);
+                    csv.WriteField(employeeAttendance.CheckOutTime);
+                    await csv.NextRecordAsync();
+                }
+                await writer.FlushAsync();
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                _logger.LogInformation("CSV File Size: {Size} bytes", memoryStream.Length);
+
+                return new ApiResponse(memoryStream.ToArray(), true, "Success", "200");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting to CSV From service.");
+                return new ApiResponse(null, false, "Failed to export to CSV From service.", "500");
+            }
+        }
+
+        public async Task<ApiResponse> GetEmployeeAttendanceExcelFile(int id)
+        {
+
+            try
+            {
+                var response = await _employeeAttendanceRepository.GetUserAttendance(id);
+                if (!response.Success)
+                {
+                    return new ApiResponse(null, false, response.Message, response.Type);
+                }
+
+                var employeeAttendances = response.Result as IEnumerable<EmployeeAttendance>;
+
+                using var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Employee Attendances of UserID" + id.ToString());
+
+                worksheet.Cell(1, 1).Value = "ID";
+                worksheet.Cell(1, 2).Value = "In Time";
+                worksheet.Cell(1, 3).Value = "Out Time";
+
+                var row = 2;
+                foreach (var emp in employeeAttendances)
+                {
+                    worksheet.Cell(row, 1).Value = emp.Id;
+                    worksheet.Cell(row, 2).Value = emp.CheckInTime;
+                    worksheet.Cell(row, 3).Value = emp.CheckOutTime;
+                    row++;
+                }
+                using var memoryStream = new MemoryStream();
+                workbook.SaveAs(memoryStream);
+                return new ApiResponse(memoryStream.ToArray(), true, "Excel file created successfully", "200");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting to Excel From service.");
+                return new ApiResponse(null, false, "Failed to export to Excel From service.", "500");
+            }
+        }
+
         public async Task<ApiResponse> GetEmployeeCSVFile()
         {
             try
@@ -47,7 +128,7 @@ namespace api.Services
                 }
 
                 var employees = response.Result as IEnumerable<Employee>;
-                var department = deptResponse.Result as IEnumerable<Department>;
+                var department = deptResponse.Result as IEnumerable<Models.Department>;
                 var designation = designationResponse.Result as IEnumerable<Designation>;
 
 
@@ -107,7 +188,7 @@ namespace api.Services
                 {
                     return new ApiResponse(null, false, deptResponse.Message, deptResponse.Type);
                 }
-                var departments = deptResponse.Result as IEnumerable<Department>;
+                var departments = deptResponse.Result as IEnumerable<Models.Department>;
 
                 var designationResponse = await _designationRepository.GetAllAsync();
                 if (!designationResponse.Success)

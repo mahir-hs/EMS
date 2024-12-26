@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { ngxCsv } from 'ngx-csv';
+import { DownloadService } from '../../../service/download.service';
 
 @Component({
   selector: 'app-attendance-user',
@@ -19,6 +20,7 @@ export class AttendanceUserComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private attendanceService: AttendanceService,
+    private downloadService: DownloadService,
     private router: Router
   ) {}
   ngOnInit(): void {
@@ -58,29 +60,42 @@ export class AttendanceUserComponent implements OnInit {
   }
 
   exportToCSV(): void {
-    const csvData = this.attendance.map((att) => ({
-      ID: att.id,
-      CheckInTime: att.checkInTime,
-      CheckOutTime: att.checkOutTime,
-    }));
-
-    const options = {
-      headers: ['ID', 'CheckInTime', 'CheckOutTime'],
-    };
-    new ngxCsv(csvData, 'EmployeeAttendance', options);
+    this.downloadService
+      .employeeAttendanceExportCsv(this.employeeId)
+      .subscribe({
+        next: (response) => {
+          const blob = new Blob([response], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'EmployeeAttendanceList.csv';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (err) => {
+          console.error('Failed to download CSV:', err);
+        },
+      });
   }
 
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
-      this.attendance.map((att) => ({
-        ID: att.id,
-        CheckInTime: att.checkInTime,
-        CheckOutTime: att.checkOutTime,
-      }))
-    );
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'EmployeeAttendance');
-
-    XLSX.writeFile(wb, 'employee-attendance.xlsx');
+    this.downloadService
+      .employeeAttendanceExportExcel(this.employeeId)
+      .subscribe({
+        next: (response) => {
+          const blob = new Blob([response], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'EmployeeAttendanceList.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (err) => {
+          console.error('Failed to download Excel:', err);
+        },
+      });
   }
 }
