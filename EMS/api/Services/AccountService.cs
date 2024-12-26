@@ -29,6 +29,11 @@ namespace api.Services
                 }
 
                 var user = data.Result as Account;
+                
+                if ( !PasswordHasher.VerifyPassword( loginDto.Password, user.Password) )
+                {
+                    return new ApiResponse(null, false, "Invalid password.");
+                }
 
                 user!.Token = CreateJwt(user.Email);
                 var newAccessToken = user.Token;
@@ -136,6 +141,70 @@ namespace api.Services
             }
         }
 
+        public async Task<ApiResponse> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                var principal = GetPrincipleFromExpiredToken(changePasswordDto.Token);
+                var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
+                var response = await _context.GetUserData(emailClaim!.Value);
+                if (!response.Success)
+                {
+                    return response;
+                }
+                var user = response.Result as Account;
+                var checkPass = PasswordValidator.CheckPassword(changePasswordDto.NewPassword);
+                if (checkPass.Length > 0)
+                {
+                    return new ApiResponse(checkPass, false, "Password is not valid.", "400");
+                }
+                
+                var passHash = PasswordHasher.HashPassword(changePasswordDto.NewPassword);
+                user!.Password = passHash;
+                await _context.UpdateAsync(user);
+                return new ApiResponse(user, true, "Password changed successfully.");
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Error while changing password.");
+                return new ApiResponse(new { error = ex.ToString() });
+            }
+        }
+
+        public async Task<ApiResponse> ChangeEmail(ChangeEmailDto changeEmailDto)
+        {
+            try
+            {
+                var principal = GetPrincipleFromExpiredToken(changeEmailDto.Token);
+                var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
+                var response = await _context.GetUserData(emailClaim!.Value);
+                if (!response.Success)
+                {
+                    return response;
+                }
+                var user = response.Result as Account;
+                var checkPass = PasswordHasher.VerifyPassword(changeEmailDto.Password, user!.Password);
+                if (!checkPass) {
+                    return new ApiResponse(null, false, "Password is incorrect.", "400");
+                }
+
+                var emailExists = await _context.GetUserData(changeEmailDto.NewEmail);
+                if (emailExists.Success)
+                {
+                    return new ApiResponse(null, false, "Email already exists.", "400");
+                }
+
+                user!.Email = changeEmailDto.NewEmail;
+                user.Token = CreateJwt(user.Email);
+                await _context.UpdateAsync(user);
+                return new ApiResponse(user, true, "Email changed successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while changing email.");
+                return new ApiResponse(new { error = ex.ToString() });
+            }
+        }
+
 
 
 
@@ -190,5 +259,7 @@ namespace api.Services
             return principal;
 
         }
+
+        
     }
 }

@@ -142,54 +142,6 @@ namespace api.Repository
             }
         }
 
-        //public async Task<ApiResponse> GetAsync(LoginDto entity)
-        //{
-        //    using var con = _context.SqlConnection();
-        //    try
-        //    {
-        //        var parameters = new DynamicParameters();
-        //        parameters.Add("@Email", entity.Email);
-        //        parameters.Add("@Password", dbType: DbType.String, direction: ParameterDirection.Output, size: 255);
-        //        parameters.Add("@ErrorMessage", dbType: DbType.String, direction: ParameterDirection.Output, size: 255);
-        //        parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
-
-        //        await con.ExecuteScalarAsync("dbo.GetUserByEmail", parameters, commandType: CommandType.StoredProcedure);
-
-        //        var errorMessage = parameters.Get<string>("@ErrorMessage");
-        //        var password = parameters.Get<string>("@Password");
-        //        var result = parameters.Get<int>("ReturnValue");
-
-        //        if (result == -1)
-        //        {
-        //            return new ApiResponse
-        //            (
-        //                null,
-        //                false,
-        //                errorMessage,
-        //                "500"
-        //            );
-        //        }
-
-
-        //        return new ApiResponse
-        //        (
-        //            new LoginDto
-        //            {
-        //                Email = entity.Email,
-        //                Password = password
-        //            },
-        //            true,
-        //            "User fetched successfully.",
-        //            "200"
-        //        );
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while fetching user: {Message}", ex.Message);
-        //        return new ApiResponse(null, false, "An error occurred while fetching user.", "500");
-        //    }
-
-        //}
 
         public async Task<ApiResponse> GetUserData(string email)
         {
@@ -198,13 +150,27 @@ namespace api.Repository
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@Email", email);
+                parameters.Add("ErrorMessage", dbType: DbType.String, direction: ParameterDirection.Output, size: 255);
+                parameters.Add("ReturnValue", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
+                var user = await con.QuerySingleOrDefaultAsync<Account>("dbo.GetUserByEmail", parameters, commandType: CommandType.StoredProcedure);
 
 
-                var fetch = await con.QuerySingleOrDefaultAsync<Account>("dbo.GetUserByEmail", parameters, commandType: CommandType.StoredProcedure);
+                var errorMessage = parameters.Get<string>("ErrorMessage");
+                var returnValue = parameters.Get<int>("ReturnValue"); 
+
+                if (returnValue == -1)
+                {
+                    return new ApiResponse(
+                        null,
+                        false,
+                        errorMessage, 
+                        "404"
+                    );
+                }
                 return new ApiResponse(
-                    fetch,
+                    user,
                     true,
-                    "Fetched user data successfully.",
+                    errorMessage,
                     "200"
                 );
             }

@@ -136,5 +136,58 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request from controller." });
             }
         }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Failed to change password");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to change password", "400"));
+            }
+
+            try
+            {
+                var response = await _context.ChangePassword(changePasswordDto);
+                if (!response.Success)
+                {
+                    _logger.LogWarning("Failed to change password");
+                    return BadRequest(response);
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing your request.");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
+        }
+
+        [HttpPost("ChangeEmail")]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto changeEmailDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Failed to change email");
+                return BadRequest(new ApiResponse(ModelState, false, "Failed to change email", "400"));
+            }
+
+            try
+            {
+                var response = await _context.ChangeEmail(changeEmailDto);
+                if (!response.Success)
+                {
+                    _logger.LogWarning("Failed to change email");
+                    return BadRequest(response);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing your request.");
+                return StatusCode(500, new { message = "An error occurred while processing your request." });
+            }
+        }
     }
 }

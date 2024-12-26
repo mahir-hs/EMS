@@ -12,5 +12,9 @@ namespace api.Services.IServices
         Task<ApiResponse> RefreshToken(TokenApiDto tokenApiDto);
         
         Task<ApiResponse> LogOut(string accessToken);
+
+        Task<ApiResponse> ChangePassword(ChangePasswordDto changePasswordDto);
+
+        Task<ApiResponse> ChangeEmail(ChangeEmailDto changeEmailDto);
     }
 }
