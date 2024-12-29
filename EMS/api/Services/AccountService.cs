@@ -13,11 +13,12 @@ using System.Text;
 
 namespace api.Services
 {
-    public class AccountService(IAccountRepository context, IConfiguration config, ILogger<AccountService> logger) : IAccountService
+    public class AccountService(IAccountRepository context, IConfiguration config, ILogger<AccountService> logger, IEmailService emailService) : IAccountService
     {
         private readonly IAccountRepository _context = context;
         private readonly IConfiguration _config = config;
         private readonly ILogger<AccountService> _logger = logger;
+        private readonly IEmailService _emailService = emailService;
         public async Task<ApiResponse> Login(LoginDto loginDto)
         {
             try
@@ -221,7 +222,7 @@ namespace api.Services
                 _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(2),
+                expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: credentials);
 
 
@@ -260,6 +261,85 @@ namespace api.Services
 
         }
 
-        
+        public async Task<ApiResponse> RequestPasswordReset(RequestPasswordResetDto requestPasswordReset)
+        {
+            try
+            {
+                var userResponse = await _context.GetUserData(requestPasswordReset.Email);
+                if (!userResponse.Success)
+                {
+                    return new ApiResponse(null, false, "Email address not found.","202");
+                }
+
+                var resetToken = CreateJwt(requestPasswordReset.Email);
+
+                var resetLink = $"{_config["App:BaseUrl"]}/api/account/reset-password?token={resetToken}";
+
+               
+                var emailSent = await _emailService.SendEmailAsync(
+                   requestPasswordReset.Email,
+                    "Password Reset Request",
+                    $"Click <a href='{resetLink}'>here</a> to reset your password. The link will expire in 5 minutes."
+                );
+
+                if (!emailSent)
+                {
+                    _logger.LogWarning("Failed to send password reset email to {Email}", requestPasswordReset.Email);
+                }
+
+                return new ApiResponse(null, true, "Password reset email sent.","202");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while requesting password reset.");
+                return new ApiResponse(new { error = ex.ToString() });
+            }
+        }
+
+        public async Task<ApiResponse> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                var principal = GetPrincipleFromExpiredToken(resetPasswordDto.Token);
+                var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
+                if (emailClaim == null)
+                {
+                    return new ApiResponse(null, false, "Invalid reset token.");
+                }
+
+                var response = await _context.GetUserData(emailClaim.Value);
+                if (!response.Success)
+                {
+                    return response;
+                }
+                var user = response.Result as Account;
+                string validPass = PasswordValidator.CheckPassword(resetPasswordDto.Password);
+                if (validPass.Length > 0 )
+                {
+                    return new ApiResponse(validPass, false, "Password must be at least 8 characters long.");
+                }
+                var passHash = PasswordHasher.HashPassword(resetPasswordDto.Password);
+                user!.Password = passHash;
+                await _context.UpdateAsync(user);
+
+                var emailSent = await _emailService.SendEmailAsync(
+                   emailClaim.Value,
+                    "Password Reset Successfully",
+                    $"Your password has been successfully reset. Click <a href='{_config["App:BaseUrl"]}/login'>here</a> to login."
+                );
+
+                if (!emailSent)
+                {
+                    _logger.LogWarning("Failed to send success password reset email to {Email}", emailClaim.Value);
+                }
+
+                return new ApiResponse(user, true, "Password has been successfully reset.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while resetting password.");
+                return new ApiResponse(new { error = ex.ToString() });
+            }
+        }
     }
 }

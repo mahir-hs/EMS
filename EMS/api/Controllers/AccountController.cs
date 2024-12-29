@@ -11,6 +11,8 @@ using System.Text;
 using api.Models;
 using api.Dto.Account;
 using api.Services.IServices;
+using api.Services;
+using System.Net;
 
 namespace api.Controllers
 {
@@ -189,5 +191,29 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
+
+        [HttpPost("request-password-reset")]
+        public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetDto resetRequestDto)
+        {
+            var response = await _context.RequestPasswordReset(resetRequestDto);
+            return StatusCode((int)HttpStatusCode.Accepted);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+
+            var response = await _context.ResetPassword(resetPasswordDto);
+            if (response.Success)
+            {
+                return Ok(response.Message);
+            }
+            else
+            {
+                return BadRequest(response.Message);
+            }
+        }
+
+
     }
 }

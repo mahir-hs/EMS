@@ -16,5 +16,9 @@ namespace api.Services.IServices
         Task<ApiResponse> ChangePassword(ChangePasswordDto changePasswordDto);
 
         Task<ApiResponse> ChangeEmail(ChangeEmailDto changeEmailDto);
+
+        Task<ApiResponse> RequestPasswordReset(RequestPasswordResetDto requestPasswordReset);
+
+        Task<ApiResponse> ResetPassword(ResetPasswordDto resetPasswordDto);
     }
 }
