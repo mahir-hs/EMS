@@ -273,7 +273,7 @@ namespace api.Services
 
                 var resetToken = CreateJwt(requestPasswordReset.Email);
 
-                var resetLink = $"{_config["App:BaseUrl"]}/api/account/reset-password?token={resetToken}";
+                var resetLink = $"{_config["App:FrontendBaseUrl"]}/reset-password?token={resetToken}";
 
                
                 var emailSent = await _emailService.SendEmailAsync(
@@ -325,7 +325,7 @@ namespace api.Services
                 var emailSent = await _emailService.SendEmailAsync(
                    emailClaim.Value,
                     "Password Reset Successfully",
-                    $"Your password has been successfully reset. Click <a href='{_config["App:BaseUrl"]}/login'>here</a> to login."
+                    $"Your password has been successfully reset. Click <a href='{_config["App:FrontendBaseUrl"]}/login'>here</a> to login."
                 );
 
                 if (!emailSent)

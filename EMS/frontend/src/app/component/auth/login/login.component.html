@@ -6,4 +6,8 @@
   <input id="password" type="password" formControlName="password" />
 
   <button type="submit" [disabled]="loginForm.invalid">Login</button>
+
+  <a [routerLink]="'/request-password-reset'" routerLinkActive="active"
+    >Forgot password?</a
+  >
 </form>

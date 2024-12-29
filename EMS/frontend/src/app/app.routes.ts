@@ -20,6 +20,8 @@ import { LoginComponent } from './component/auth/login/login.component';
 import { RegisterComponent } from './component/auth/register/register.component';
 import { authGuard } from './AuthGuard/auth.guard';
 import { redirectLoggedinGuard } from './AuthGuard/redirect-loggedin.guard';
+import { ResetPasswordComponent } from './component/auth/reset-password/reset-password.component';
+import { RequestPasswordResetComponent } from './component/auth/request-password-reset/request-password-reset.component';
 
 export const routes: Routes = [
   { path: '', component: EmployeeListComponent, canActivate: [authGuard] },
@@ -104,4 +106,6 @@ export const routes: Routes = [
     component: RegisterComponent,
     canActivate: [redirectLoggedinGuard],
   },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'request-password-reset', component: RequestPasswordResetComponent },
 ];

@@ -196,7 +196,12 @@ namespace api.Controllers
         public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetDto resetRequestDto)
         {
             var response = await _context.RequestPasswordReset(resetRequestDto);
-            return StatusCode((int)HttpStatusCode.Accepted);
+            if (!response.Success)
+            {
+                return BadRequest(response); 
+            }
+            return Accepted(response);
+        
         }
 
         [HttpPost("reset-password")]
@@ -204,14 +209,12 @@ namespace api.Controllers
         {
 
             var response = await _context.ResetPassword(resetPasswordDto);
-            if (response.Success)
-            {
-                return Ok(response.Message);
-            }
-            else
+            if (!response.Success)
             {
                 return BadRequest(response.Message);
+                
             }
+            return Ok(response.Message);
         }
 
 

@@ -56,6 +56,16 @@ export class AuthService {
       });
   }
 
+  requestPasswordReset(email: string) {
+    return this.http.post(`${this.apiUrl}/request-password-reset`, { email });
+  }
+  resetPassword(resetPasswordData: {
+    token: string;
+    password: string;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, resetPasswordData);
+  }
+
   clearSession() {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
