@@ -12,7 +12,7 @@ import { NavbarComponent } from './component/navbar/navbar.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  isLoginPage: boolean = false;
+  isAuthPage: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -20,7 +20,10 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
-        this.isLoginPage = event.url.includes('/login');
+        this.isAuthPage =
+          event.url.includes('/login') ||
+          event.url.includes('/register') ||
+          event.url.includes('/request-password-reset');
       });
   }
 }

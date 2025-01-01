@@ -7,12 +7,12 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
@@ -35,10 +35,9 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (res: any) => {
-          alert('Registration successful!');
-          console.log(res);
           this.authService.setToken(res.result.token);
           this.authService.setRefreshToken(res.result.refreshToken);
+
           this.router.navigate(['/']);
         },
         error: (err) =>

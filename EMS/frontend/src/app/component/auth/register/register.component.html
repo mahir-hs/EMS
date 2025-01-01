@@ -1,10 +1,42 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  <label for="email">Email:</label>
-  <input id="email" type="email" formControlName="email" />
+<div class="register-container">
+  <div class="left-container">
+    <h2>TalentGRID</h2>
+  </div>
+  <div class="right-container">
+    <h3>Welcome!</h3>
+    <h3>Let's Sign up an account</h3>
+    <p>Ready to rumble?</p>
+    <div class="form-container">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <label for="email"></label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+        />
 
-  <label for="password">Password:</label>
-  <input id="password" type="password" formControlName="password" />
+        <label for="password"></label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+        />
 
-  <button type="submit" [disabled]="registerForm.invalid">Register</button>
-  <p *ngIf="errorMessage">{{ errorMessage }}</p>
-</form>
+        <button type="submit" [disabled]="registerForm.invalid">
+          Register
+        </button>
+        <p *ngIf="errorMessage">{{ errorMessage }}</p>
+      </form>
+    </div>
+    <div class="inline-or">
+      <hr />
+      <p>or</p>
+      <hr />
+    </div>
+    <div class="login">
+      <p>Already have an account? <a [routerLink]="'/login'">Sign In</a></p>
+    </div>
+  </div>
+</div>

@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
     this.populateRememberedData();
   }
   populateRememberedData() {
-    const rememberedEmail = localStorage.getItem('rememberedEmail');
-    const rememberedPassword = localStorage.getItem('rememberedPassword');
+    const rememberedEmail = localStorage.getItem('email');
+    const rememberedPassword = localStorage.getItem('password');
 
     if (rememberedEmail && rememberedPassword) {
       this.loginForm.patchValue({
@@ -66,13 +66,16 @@ export class LoginComponent implements OnInit {
           this.authService.setRefreshToken(res.refreshToken);
           const rememberMe = this.loginForm.get('rememberMe')?.value;
           const email = this.loginForm.get('email')?.value;
+          const password = this.loginForm.get('password')?.value;
           console.log(rememberMe);
           if (rememberMe) {
             localStorage.setItem('rememberMe', 'true');
+            localStorage.setItem('password', password);
             localStorage.setItem('email', email);
           } else {
             localStorage.removeItem('rememberMe');
             localStorage.removeItem('email');
+            localStorage.removeItem('password');
           }
           this.router.navigate(['/']);
         },
