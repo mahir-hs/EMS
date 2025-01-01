@@ -23,7 +23,8 @@ export class AppComponent implements OnInit {
         this.isAuthPage =
           event.url.includes('/login') ||
           event.url.includes('/register') ||
-          event.url.includes('/request-password-reset');
+          event.url.includes('/request-password-reset') ||
+          event.url.includes('/reset-password');
       });
   }
 }
