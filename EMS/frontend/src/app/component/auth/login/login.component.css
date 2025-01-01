@@ -1,0 +1,145 @@
+*{
+  margin:0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-container{
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1.82fr 1.18fr;
+  align-items: center;
+  background-color: #000000;
+}
+
+.video-container{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video-container video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.right-container {
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 4px 10px rgba(249, 3, 3, 0.3);
+  height: 100%;
+  align-items: start;
+  padding-left: 13%;
+  padding-top: 9%;
+  padding-right: 13%;
+  padding-bottom: 13%;
+}
+
+.right-container h3 {
+  color: rgb(0, 0, 0);
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 26px;
+}
+
+.right-container p {
+  padding-top: 3%;
+  padding-bottom: 3%;
+  font-size: 13px;
+}
+
+.right-container .form-container{
+  padding-top: 4%;
+  padding-left: 2%;
+}
+.right-container .form-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.right-container .form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.right-container .form-container button:disabled {
+  background-color: #ccc;
+}
+
+.right-container .form-container .form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.right-container .form-container .remember-me {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.right-container .form-container .remember-me input[type="checkbox"] {
+  margin: 0;
+}
+.right-container .form-container .remember-me label {
+  font-size: 15px;
+  margin-left: 5px;
+}
+
+.right-container .form-container .links a {
+  color: #3f51b5;
+  text-decoration: none;
+}
+
+.right-container .form-container .links a:hover {
+  text-decoration: underline;
+}
+
+.right-container .inline-or {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10%;
+}
+.right-container .inline-or hr {
+  flex: 1;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+.right-container .inline-or p {
+  margin: 0;
+  padding: 0 10px;
+}
+
+
+.right-container .register {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.right-container .register p {
+  font-size: 14px;
+  color: #666;
+}
+
+.right-container .register a {
+  color: #3f51b5;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.right-container .register a:hover {
+  text-decoration: underline;
+}

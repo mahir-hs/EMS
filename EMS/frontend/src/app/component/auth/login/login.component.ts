@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,27 +7,54 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { Router, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    CommonModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
-  loginForm: FormGroup;
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
   errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {
+  ) {}
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', Validators.required],
+      rememberMe: [false],
     });
+    this.populateRememberedData();
+  }
+  populateRememberedData() {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const rememberedPassword = localStorage.getItem('rememberedPassword');
+
+    if (rememberedEmail && rememberedPassword) {
+      this.loginForm.patchValue({
+        email: rememberedEmail,
+        password: rememberedPassword,
+        rememberMe: true,
+      });
+    }
   }
 
   onSubmit() {
@@ -37,6 +64,16 @@ export class LoginComponent {
           console.log(res);
           this.authService.setToken(res.accessToken);
           this.authService.setRefreshToken(res.refreshToken);
+          const rememberMe = this.loginForm.get('rememberMe')?.value;
+          const email = this.loginForm.get('email')?.value;
+          console.log(rememberMe);
+          if (rememberMe) {
+            localStorage.setItem('rememberMe', 'true');
+            localStorage.setItem('email', email);
+          } else {
+            localStorage.removeItem('rememberMe');
+            localStorage.removeItem('email');
+          }
           this.router.navigate(['/']);
         },
         error: (err) =>

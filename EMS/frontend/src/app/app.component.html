@@ -1,2 +1,4 @@
-<app-navbar></app-navbar> <!-- This will display the Navbar -->
-<router-outlet></router-outlet> <!-- Routed views will be displayed here -->
+<app-navbar *ngIf="!isLoginPage"></app-navbar>
+<!-- This will display the Navbar -->
+<router-outlet></router-outlet>
+<!-- Routed views will be displayed here -->

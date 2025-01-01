@@ -1,13 +1,59 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <label for="email">Email:</label>
-  <input id="email" type="email" formControlName="email" />
+<div class="login-container">
+  <div class="video-container">
+    <video autoplay muted loop>
+      <source src="/login.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="right-container">
+    <h3>Welcome Back!</h3>
+    <h3>Login to your account</h3>
+    <p>It's nice to see you again. Ready to enter zone?</p>
+    <div class="form-container">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <label for="email"></label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+        />
 
-  <label for="password">Password:</label>
-  <input id="password" type="password" formControlName="password" />
+        <label for="password"></label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+        />
+        <button type="submit" [disabled]="loginForm.invalid">Login</button>
 
-  <button type="submit" [disabled]="loginForm.invalid">Login</button>
-
-  <a [routerLink]="'/request-password-reset'" routerLinkActive="active"
-    >Forgot password?</a
-  >
-</form>
+        <div class="form-options">
+          <div class="remember-me">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              formControlName="rememberMe"
+            />
+            <label for="rememberMe">Remember me</label>
+          </div>
+          <div class="links">
+            <a
+              [routerLink]="'/request-password-reset'"
+              routerLinkActive="active"
+            >
+              Forgot password?
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="inline-or">
+      <hr />
+      <p>or</p>
+      <hr />
+    </div>
+    <div class="register">
+      <p>Don't have an account? <a [routerLink]="'/register'">Register</a></p>
+    </div>
+  </div>
+</div>
