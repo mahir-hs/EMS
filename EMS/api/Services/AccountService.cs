@@ -81,7 +81,7 @@ namespace api.Services
                     return new ApiResponse(checkPass, false, "Password is not valid.", "400");
                 }
                 var passHash = PasswordHasher.HashPassword(registerDto.Password);
-                var role = (roleId == 1) ? "Admin" : "User";
+                var role = (roleId == 1) ? "Admin" : "Employee";
                 var user = new Account
                 {
                     Email = registerDto.Email,
