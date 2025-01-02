@@ -18,10 +18,11 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController(IAccountService context, ILogger<AccountController> logger) : ControllerBase
+    public class AccountController(IAccountService context, ILogger<AccountController> logger,IJwtService jwt) : ControllerBase
     {
         private readonly ILogger<AccountController> _logger = logger;
         private readonly IAccountService _context = context;
+        private readonly IJwtService _jwt = jwt;
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto user)
@@ -69,7 +70,7 @@ namespace api.Controllers
 
             try
             {
-                var userObj = await _context.Register(user);
+                var userObj = await _context.Register(user,1);
                 if (!userObj.Success)
                 {
                     _logger.LogWarning("Failed to Register");
@@ -97,7 +98,7 @@ namespace api.Controllers
 
             try
             {
-                var response = await _context.RefreshToken(tokenApiDto);
+                var response = await _jwt.RefreshToken(tokenApiDto);
                 if (!response.Success)
                 {
                     _logger.LogWarning("Failed to refresh token");
@@ -139,6 +140,7 @@ namespace api.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
         {
@@ -165,7 +167,7 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
-
+        [Authorize]
         [HttpPost("ChangeEmail")]
         public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto changeEmailDto)
         {

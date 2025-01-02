@@ -4,21 +4,16 @@ using api.Helpers;
 using api.Models;
 using api.Repository.IRepository;
 using api.Services.IServices;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace api.Services
 {
-    public class AccountService(IAccountRepository context, IConfiguration config, ILogger<AccountService> logger, IEmailService emailService) : IAccountService
+    public class AccountService(IAccountRepository context, IConfiguration config, ILogger<AccountService> logger, IEmailService emailService,IJwtService jwt) : IAccountService
     {
         private readonly IAccountRepository _context = context;
         private readonly IConfiguration _config = config;
         private readonly ILogger<AccountService> _logger = logger;
         private readonly IEmailService _emailService = emailService;
+        private readonly IJwtService _jwt = jwt;
         public async Task<ApiResponse> Login(LoginDto loginDto)
         {
             try
@@ -31,14 +26,14 @@ namespace api.Services
 
                 var user = data.Result as Account;
                 
-                if ( !PasswordHasher.VerifyPassword( loginDto.Password, user.Password) )
+                if ( !PasswordHasher.VerifyPassword( loginDto.Password, user!.Password) )
                 {
                     return new ApiResponse(null, false, "Invalid password.");
                 }
 
-                user!.Token = CreateJwt(user.Email);
+                user!.Token = _jwt.CreateJwt(user.Email,user.RoleName);
                 var newAccessToken = user.Token;
-                var newRefreshToken = await CreateRefreshToken();
+                var newRefreshToken = await _jwt.CreateRefreshToken();
                 user.RefreshToken = newRefreshToken;
                 user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5);
                 Console.WriteLine($"User: {user} {user.Email} {user.Password} {user.RoleId} {user.Token} {user.RefreshToken} {user.RefreshTokenExpiryTime}");
@@ -58,7 +53,7 @@ namespace api.Services
         {
             try
             {
-                var principal = GetPrincipleFromExpiredToken(accessToken);
+                var principal = _jwt.GetPrincipleFromExpiredToken(accessToken);
                 var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
                 Console.WriteLine(emailClaim);
                 var result = await _context.LogOut(emailClaim!.Value);
@@ -76,7 +71,7 @@ namespace api.Services
             }
         }
 
-        public async Task<ApiResponse> Register(RegisterDto registerDto)
+        public async Task<ApiResponse> Register(RegisterDto registerDto, int roleId)
         {
             try
             {
@@ -86,13 +81,14 @@ namespace api.Services
                     return new ApiResponse(checkPass, false, "Password is not valid.", "400");
                 }
                 var passHash = PasswordHasher.HashPassword(registerDto.Password);
+                var role = (roleId == 1) ? "Admin" : "User";
                 var user = new Account
                 {
                     Email = registerDto.Email,
                     Password = passHash,
-                    RoleId = registerDto.RoleId,
-                    Token = CreateJwt(registerDto.Email),
-                    RefreshToken = await CreateRefreshToken(),
+                    RoleId = roleId,
+                    Token = _jwt.CreateJwt(registerDto.Email, role),
+                    RefreshToken = await _jwt.CreateRefreshToken(),
                     RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5)
                 };
                 Console.WriteLine($"User: {user} {user.Email} {user.Password} {user.RoleId} {user.Token} {user.RefreshToken} {user.RefreshTokenExpiryTime}");
@@ -112,41 +108,13 @@ namespace api.Services
             }
         }
 
-        public async Task<ApiResponse> RefreshToken(TokenApiDto tokenApiDto)
-        {
-            try
-            {
-                var principal = GetPrincipleFromExpiredToken(tokenApiDto.AccessToken);
-                var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
-                var response = await _context.GetUserData(emailClaim!.Value);
-                if (!response.Success)
-                {
-                    return response;
-                }
-                var user = response.Result as Account;
-                if (user!.RefreshToken != tokenApiDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                {
-                    return new ApiResponse(new { error = "Invalid refresh token." });
-                }
-                user.Token = CreateJwt(emailClaim!.Value);
-                user.RefreshToken = await CreateRefreshToken();
-                user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(1);
-                await _context.UpdateAsync(user);
-                var data = new TokenApiDto { AccessToken = user.Token, RefreshToken = user.RefreshToken };
-                return new ApiResponse(data, true, "Token refreshed successfully.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while refreshing token.");
-                return new ApiResponse(new { error = ex.ToString() });
-            }
-        }
+        
 
         public async Task<ApiResponse> ChangePassword(ChangePasswordDto changePasswordDto)
         {
             try
             {
-                var principal = GetPrincipleFromExpiredToken(changePasswordDto.Token);
+                var principal = _jwt.GetPrincipleFromExpiredToken(changePasswordDto.Token);
                 var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
                 var response = await _context.GetUserData(emailClaim!.Value);
                 if (!response.Success)
@@ -175,7 +143,7 @@ namespace api.Services
         {
             try
             {
-                var principal = GetPrincipleFromExpiredToken(changeEmailDto.Token);
+                var principal = _jwt.GetPrincipleFromExpiredToken(changeEmailDto.Token);
                 var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
                 var response = await _context.GetUserData(emailClaim!.Value);
                 if (!response.Success)
@@ -195,7 +163,7 @@ namespace api.Services
                 }
 
                 user!.Email = changeEmailDto.NewEmail;
-                user.Token = CreateJwt(user.Email);
+                user.Token = _jwt.CreateJwt(user.Email,user.RoleName);
                 await _context.UpdateAsync(user);
                 return new ApiResponse(user, true, "Email changed successfully.");
             }
@@ -210,56 +178,7 @@ namespace api.Services
 
 
 
-        public string CreateJwt(string email)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim("Email", email)
-            };
-            var token = new JwtSecurityToken(
-                _config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(5),
-                signingCredentials: credentials);
-
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public async Task<string> CreateRefreshToken()
-        {
-            var tokenBytes = RandomNumberGenerator.GetBytes(64);
-            var refreshToken = Convert.ToBase64String(tokenBytes);
-
-            var data = await _context.RefreshTokenExists(refreshToken);
-            var count = data.Result;
-            if (count == 1)
-            {
-                return await CreateRefreshToken();
-            }
-            return refreshToken;
-        }
-
-        public ClaimsPrincipal GetPrincipleFromExpiredToken(string token)
-        {
-            TokenValidationParameters tokenValidationParameters = new()
-            {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"])),
-                ValidateLifetime = false
-            };
-            var principal = new JwtSecurityTokenHandler().ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("This is Invalid Token");
-            return principal;
-
-        }
+        
 
         public async Task<ApiResponse> RequestPasswordReset(RequestPasswordResetDto requestPasswordReset)
         {
@@ -271,7 +190,7 @@ namespace api.Services
                     return new ApiResponse(null, false, "Email address not found.","202");
                 }
 
-                var resetToken = CreateJwt(requestPasswordReset.Email);
+                var resetToken = _jwt.CreateJwt(requestPasswordReset.Email, userResponse.Result!.RoleName);
 
                 var resetLink = $"{_config["App:FrontendBaseUrl"]}/reset-password?token={resetToken}";
 
@@ -300,7 +219,7 @@ namespace api.Services
         {
             try
             {
-                var principal = GetPrincipleFromExpiredToken(resetPasswordDto.Token);
+                var principal = _jwt.GetPrincipleFromExpiredToken(resetPasswordDto.Token);
                 var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == "Email");
                 if (emailClaim == null)
                 {

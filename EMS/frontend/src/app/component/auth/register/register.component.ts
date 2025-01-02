@@ -35,9 +35,10 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (res: any) => {
+          this.authService.clearSession();
           this.authService.setToken(res.result.token);
           this.authService.setRefreshToken(res.result.refreshToken);
-
+          this.authService.setRole(res.result.token);
           this.router.navigate(['/']);
         },
         error: (err) =>

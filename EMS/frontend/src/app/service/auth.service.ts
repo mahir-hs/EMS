@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -69,6 +70,7 @@ export class AuthService {
   clearSession() {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
     this.isAuthenticated.next(false);
   }
   setToken(token: string) {
@@ -78,6 +80,16 @@ export class AuthService {
 
   setRefreshToken(token: string) {
     localStorage.setItem('refreshToken', token);
+  }
+
+  setRole(token: string) {
+    const decodedToken: any = jwtDecode(token);
+    console.log(decodedToken.Role);
+    localStorage.setItem('role', decodedToken.Role);
+  }
+
+  getRole(): string | null {
+    return localStorage.getItem('role');
   }
 
   getToken(): string | null {
@@ -92,7 +104,13 @@ export class AuthService {
       this.router.navigate(['/']);
     }
   }
+  isRole(role: string): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
 
+    const decodedToken: any = jwtDecode(token);
+    return decodedToken.Role === role;
+  }
   decodeToken(token: string): any {
     const payload = token.split('.')[1];
     return JSON.parse(atob(payload));

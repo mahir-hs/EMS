@@ -8,12 +8,12 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
     public class EmployeeController(IEmployeeService context, ILogger<EmployeeController> logger) : ControllerBase
     {
         private readonly IEmployeeService _context = context;
         private readonly ILogger<EmployeeController> _logger = logger;
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
@@ -35,7 +35,7 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
-
+        [Authorize]
         [HttpGet("get")]
         public async Task<IActionResult> Get([FromQuery] int id)
         {
@@ -57,7 +57,7 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("add")]
         public async Task<IActionResult> Add([FromBody] EmployeeCreateDto dto)
         {
@@ -83,7 +83,7 @@ namespace api.Controllers
                 return StatusCode(500, new { message = "An error occurred while processing your request." });
             }
         }
-
+        [Authorize]
         [HttpPatch("update")]
         public async Task<IActionResult> Update([FromQuery] int id,[FromBody] EmployeeUpdateDto dto)
         {
@@ -108,7 +108,7 @@ namespace api.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {

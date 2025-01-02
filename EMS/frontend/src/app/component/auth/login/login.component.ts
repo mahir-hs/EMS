@@ -62,8 +62,10 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe({
         next: (res: any) => {
           console.log(res);
+          this.authService.clearSession();
           this.authService.setToken(res.accessToken);
           this.authService.setRefreshToken(res.refreshToken);
+          this.authService.setRole(res.accessToken);
           const rememberMe = this.loginForm.get('rememberMe')?.value;
           const email = this.loginForm.get('email')?.value;
           const password = this.loginForm.get('password')?.value;

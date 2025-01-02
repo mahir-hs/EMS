@@ -7,9 +7,7 @@ namespace api.Services.IServices
     public interface IAccountService
     {
         Task<ApiResponse> Login(LoginDto loginDto);
-        Task<ApiResponse> Register(RegisterDto registerDto);
-
-        Task<ApiResponse> RefreshToken(TokenApiDto tokenApiDto);
+        Task<ApiResponse> Register(RegisterDto registerDto,int roleId);
         
         Task<ApiResponse> LogOut(string accessToken);
 

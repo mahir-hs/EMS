@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dto.Account;
 using api.Dto.Employees;
 using api.Mappers;
 using api.Models;
@@ -11,10 +12,11 @@ using api.Services.IServices;
 
 namespace api.Services
 {
-    public class EmployeeService(IEmployeeRepository context,ILogger<IEmployeeService> logger) : IEmployeeService
+    public class EmployeeService(IEmployeeRepository context,ILogger<IEmployeeService> logger,IAccountService account) : IEmployeeService
     {
         private readonly IEmployeeRepository _context = context;
         private readonly ILogger<IEmployeeService> _logger = logger;
+        private readonly IAccountService _account = account;
         
         public async Task<ApiResponse> AddAsync(EmployeeCreateDto entity)
         {
@@ -42,6 +44,35 @@ namespace api.Services
                     );
                 }
                 var data = response.Result as Employee;
+
+                try
+                {
+                    RegisterDto registerDto = new()
+                    {
+                        Email = data!.Email,
+                        Password = "abcdefA1!",
+                    };
+                    var responseRegistration = await _account.Register(registerDto,2);
+                    if (!responseRegistration.Success)
+                    {
+                        return new ApiResponse(
+                            null,
+                            false,
+                            responseRegistration.Message,
+                            responseRegistration.Type
+                        );
+                    }
+                }
+                catch (Exception ex) {
+                    _logger.LogError(ex, "An error occurred while adding an employee");
+                    return new ApiResponse(
+                        null,
+                        false,
+                        ex.Message,
+                        "500"
+                    );
+                }
+
                
                 return new ApiResponse(
                     data.ToEmployeeDto(),

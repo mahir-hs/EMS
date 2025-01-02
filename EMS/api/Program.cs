@@ -1,9 +1,7 @@
-using System.Net.NetworkInformation;
+using System.Security.Claims;
 using System.Text;
-using api.Controllers;
 using api.Data;
 using api.Data.Contexts;
-using api.Dto.Employees;
 using api.Repository;
 using api.Repository.IRepository;
 using api.Services;
@@ -25,6 +23,7 @@ builder.Services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IDownloadService, DownloadService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IDesignationRepository, DesignationRepository>();
@@ -47,7 +46,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-        ClockSkew = TimeSpan.Zero
+        ClockSkew = TimeSpan.Zero,
+        RoleClaimType = "Role"
     };
     options.Events = new JwtBearerEvents
     {
