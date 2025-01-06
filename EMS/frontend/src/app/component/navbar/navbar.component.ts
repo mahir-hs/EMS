@@ -17,6 +17,10 @@ export class NavbarComponent {
     return this.authService.isLoggedIn();
   }
 
+  isRole(role: string): boolean {
+    return this.authService.getRole() === role;
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

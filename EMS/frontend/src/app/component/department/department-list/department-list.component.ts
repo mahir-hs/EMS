@@ -6,6 +6,7 @@ import {
   Department,
   DepartmentService,
 } from '../../../service/department.service';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-department-list',
@@ -18,12 +19,17 @@ export class DepartmentListComponent implements OnInit {
   department: Department[] = [];
   loading: boolean = true;
 
-  constructor(private departmentService: DepartmentService) {}
+  constructor(
+    private departmentService: DepartmentService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.fetchDepartments();
   }
-
+  isRole(role: string): boolean {
+    return this.authService.getRole() === role;
+  }
   fetchDepartments(): void {
     this.departmentService.getAll().subscribe({
       next: (data) => {

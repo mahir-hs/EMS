@@ -11,6 +11,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.department-container h1 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+  color: #333;
+}
+
 /* Header Styling */
 .header {
   display: flex;

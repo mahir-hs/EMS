@@ -5,6 +5,7 @@ import {
   Designation,
   DesignationService,
 } from '../../../service/designation.service';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-designation-list',
@@ -17,12 +18,17 @@ export class DesignationListComponent implements OnInit {
   designation: Designation[] = [];
   loading: boolean = true;
 
-  constructor(private designationService: DesignationService) {}
+  constructor(
+    private designationService: DesignationService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.fetchDesignation();
   }
-
+  isRole(role: string): boolean {
+    return this.authService.getRole() === role;
+  }
   fetchDesignation(): void {
     this.designationService.getAll().subscribe({
       next: (data) => {

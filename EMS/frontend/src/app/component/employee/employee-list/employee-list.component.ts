@@ -1,3 +1,4 @@
+import { AuthService } from './../../../service/auth.service';
 import { DownloadService } from './../../../service/download.service';
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService, Employee } from '../../../service/employee.service';
@@ -5,9 +6,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DepartmentService } from '../../../service/department.service';
 import { DesignationService } from '../../../service/designation.service';
-import { AttendanceService } from '../../../service/attendance.service';
-import * as XLSX from 'xlsx';
-import { ngxCsv } from 'ngx-csv';
 @Component({
   selector: 'app-employee-list',
   standalone: true,
@@ -29,7 +27,8 @@ export class EmployeeListComponent implements OnInit {
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
     private designationService: DesignationService,
-    private downloadService: DownloadService
+    private downloadService: DownloadService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -37,7 +36,9 @@ export class EmployeeListComponent implements OnInit {
     this.fetchDepartments();
     this.fetchDesignations();
   }
-
+  isRole(role: string): boolean {
+    return this.authService.getRole() === role;
+  }
   fetchEmployees(): void {
     this.employeeService.getAll().subscribe({
       next: (data) => {

@@ -87,15 +87,16 @@ h1 {
 
 /* Table */
 .employee-table {
-  width: 100%;
+  width: 96%; /* Ensures some space on both sides */
+  margin: 10px auto; /* Centers the table horizontally and adds top margin */
   border-collapse: collapse;
-  margin-top: 10px;
   background-color: #fff;
   border-radius: 5px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for a clean look */
+  text-align: center; /* Aligns content to the center */
 }
+
 
 .employee-table th,
 .employee-table td {
@@ -146,6 +147,7 @@ h1 {
   display: flex;
   justify-content: center;
   margin-top: 15px;
+  margin-bottom: 15px;
   gap: 10px;
 }
 

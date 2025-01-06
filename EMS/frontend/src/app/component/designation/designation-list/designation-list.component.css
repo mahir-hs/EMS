@@ -8,21 +8,14 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  align-items: center;
 }
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+.designation-container h1 {
+  text-align: center;
   margin-bottom: 15px;
-}
-
-.header h1 {
   font-size: 1.8rem;
   color: #333;
-  align-items: center;
 }
 
 .add-btn {

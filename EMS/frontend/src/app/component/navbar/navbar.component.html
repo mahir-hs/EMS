@@ -16,7 +16,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item" *ngIf="isLoggedIn()">
+        <li class="nav-item" *ngIf="isLoggedIn() && isRole('Admin')">
           <a [routerLink]="'/'" routerLinkActive="active" class="nav-link"
             >Employees</a
           >
@@ -37,7 +37,7 @@
             >Designation</a
           >
         </li>
-        <li class="nav-item" *ngIf="isLoggedIn()">
+        <li class="nav-item" *ngIf="isLoggedIn() && isRole('Admin')">
           <a
             [routerLink]="'/attendance-list'"
             routerLinkActive="active"
@@ -45,7 +45,7 @@
             >Attendance</a
           >
         </li>
-        <li class="nav-item" *ngIf="isLoggedIn()">
+        <li class="nav-item" *ngIf="isLoggedIn() && isRole('Admin')">
           <a
             [routerLink]="'/log-list'"
             routerLinkActive="active"

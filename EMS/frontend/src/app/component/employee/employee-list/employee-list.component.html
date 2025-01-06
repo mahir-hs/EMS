@@ -2,13 +2,18 @@
 <div *ngIf="loading" class="loading-container">
   <p>Loading...</p>
 </div>
-
-<div *ngIf="!loading && employees.length === 0" class="empty-state">
+<div
+  *ngIf="!loading && employees.length === 0 && isRole('Admin')"
+  class="empty-state"
+>
   <p>No employees found. <a [routerLink]="'/employee-add'">Add New</a></p>
 </div>
 
-<div *ngIf="!loading && employees.length > 0" class="employee-list">
-  <div class="action-buttons">
+<div
+  *ngIf="!loading && employees.length > 0 && isRole('Admin')"
+  class="employee-list"
+>
+  <div *ngIf="isRole('Admin')" class="action-buttons">
     <a [routerLink]="'/employee-add'" class="add-employee-btn">Add Employee</a>
     <button (click)="exportToCSV()" class="download-btn">Download CSV</button>
     <button (click)="exportToExcel()" class="download-btn">
@@ -16,7 +21,7 @@
     </button>
   </div>
 
-  <table class="employee-table">
+  <table *ngIf="isRole('Admin')" class="employee-table">
     <thead>
       <tr>
         <th
@@ -119,7 +124,10 @@
     </tbody>
   </table>
 
-  <div *ngIf="employees.length > itemsPerPage" class="pagination">
+  <div
+    *ngIf="employees.length > itemsPerPage && isRole('Admin')"
+    class="pagination"
+  >
     <button (click)="previousPage()" [disabled]="currentPage === 1">
       Previous
     </button>
